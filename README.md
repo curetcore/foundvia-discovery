@@ -27,6 +27,14 @@ Open `audit.md` in your editor. Each finding includes **evidence, a next action 
 
 The auditor reads the initial page response, robots rules and one sitemap. It does not render JavaScript, impersonate a crawler, or prove indexing, rankings or traffic. [Options and limits →](docs/auditor.md)
 
+For a report you can open in your browser, export a standalone HTML file:
+
+```bash
+python3 discovery.py audit https://example.com --format html > audit.html
+```
+
+Open `audit.html`, filter findings by status, and expand each finding for evidence and next actions. It works offline with its font included. The report interface is in English.
+
 ## Read your result
 
 | Label | Meaning | Your next step |

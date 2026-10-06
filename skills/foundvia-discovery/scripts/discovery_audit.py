@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Bounded initial-response discovery audit. Python 3.10+, standard library only."""
 import argparse
+import base64
+import html
+from pathlib import Path
+from string import Template
 import datetime as dt
 import http.client
 from html.parser import HTMLParser
@@ -420,10 +424,54 @@ def markdown(report):
     return "\n".join(lines + ["## Limits", ""] + ["- " + item for item in report["limits"]])
 
 
+def html_report(report):
+    """Standalone report: escape fetched data; embed local assets only."""
+    assets = Path(__file__).resolve().parent.parent / "assets"
+    escape = lambda value: html.escape(str(value), quote=True)
+
+    def link(value):
+        try:
+            safe = clean_url(value)
+        except ValueError:
+            return escape(value)
+        return '<a href="' + escape(safe) + '" target="_blank" rel="noopener noreferrer">' + escape(value) + '</a>'
+
+    counts = report["summary"]["counts"]
+    headline = (str(counts["block"]) + " observed blocker" + ("s" if counts["block"] != 1 else "") + " to review." if counts["block"] else
+                "Some checks could not be completed." if report["summary"]["incomplete"] else
+                "Review the configuration differences." if counts["warn"] else "No blockers observed in these checks.")
+    rank = {"block": 0, "unknown": 1, "warn": 2, "info": 3, "pass": 4}
+    findings = []
+    for finding in sorted(report["findings"], key=lambda f: rank[f["status"]]):
+        status = finding["status"]
+        findings.append('<details class="finding ' + status + '" data-status="' + status + '"' + (' open' if status in ("block", "unknown", "warn") else '') + '>' +
+                        '<summary><span class="badge">' + status.upper() + '</span><span class="check">' + escape(finding["check"]) + '</span><span class="toggle" aria-hidden="true">+</span></summary>' +
+                        '<div class="detail"><p class="location">' + link(finding["location"]) + '</p><dl>' +
+                        '<dt>Observed evidence</dt><dd>' + escape(finding["evidence"]) + '</dd><dt>Next action</dt><dd class="next">' + escape(finding["action"]) + '</dd>' +
+                        '<dt>Verify</dt><dd>' + escape(finding["verification"]) + '</dd></dl><p class="confidence">Confidence: ' + escape(finding["confidence"]) + ' · Priority: ' + escape(finding["priority"] or "none") + '</p></div></details>')
+    skipped = report["summary"]["skipped_checks"]
+    coverage_detail = 'HTML checks not run: ' + ', '.join(skipped) + '.' if skipped else 'Read each finding within the stated inspection scope.'
+    if report.get("sitemap_coverage", {}).get("partial"):
+        coverage_detail += ' Child sitemap coverage is partial.'
+    checked = report["checked_at"]
+    try:
+        checked = dt.datetime.fromisoformat(checked).astimezone(dt.timezone.utc).strftime("%d %b %Y · %H:%M UTC")
+    except ValueError:
+        pass
+    return Template((assets / "report.html").read_text(encoding="utf-8")).substitute(
+        PAGE_TITLE=escape(report["final_url"]), FONT=base64.b64encode((assets / "fonts/geist-latin.woff2").read_bytes()).decode("ascii"),
+        CHECKED=escape(checked), HEADLINE=escape(headline), SITE=link(report["final_url"]), SCOPE=escape(report["summary"]["scope"]),
+        COVERAGE="Incomplete within the inspection scope" if report["summary"]["incomplete"] else "Checks completed within the inspection scope",
+        COVERAGE_DETAIL=escape(coverage_detail), COUNTS=''.join('<div class="metric"><b>' + str(counts[status]) + '</b><span>' + status.upper() + '</span></div>' for status in rank),
+        FILTERS='<button type="button" data-filter="all" aria-pressed="true">All (' + str(len(findings)) + ')</button>' + ''.join('<button type="button" data-filter="' + status + '" aria-pressed="false">' + status.upper() + ' (' + str(counts[status]) + ')</button>' for status in rank),
+        FINDINGS=''.join(findings), LIMITS=''.join('<li>' + escape(limit) + '</li>' for limit in report["limits"]), VERSION=escape(report["version"]),
+        LICENSE=escape((assets / "fonts/OFL.txt").read_text(encoding="utf-8")))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("url")
-    parser.add_argument("--format", choices=("markdown", "json"), default="markdown")
+    parser.add_argument("--format", choices=("markdown", "json", "html"), default="markdown")
     parser.add_argument("--sitemap-children", type=int, default=0, help="Inspect up to N same-origin sitemap children (0–5; default 0, one level only)")
     parser.add_argument("--timeout", type=float, default=10, help="Seconds per request (0 < timeout <= 30)")
     parser.add_argument("--require-complete", action="store_true", help="Exit 3 when any check is unknown or initial HTML checks were skipped")
@@ -435,7 +483,7 @@ def main():
         report = audit(args.url, args.timeout, args.sitemap_children)
     except ValueError as exc:
         parser.error(str(exc))
-    print(json.dumps(report, indent=2, ensure_ascii=False) if args.format == "json" else markdown(report))
+    print(json.dumps(report, indent=2, ensure_ascii=False) if args.format == "json" else html_report(report) if args.format == "html" else markdown(report))
     if args.fail_on_block and report["summary"]["counts"]["block"]:
         return 1
     return 3 if args.require_complete and report["summary"]["incomplete"] else 0

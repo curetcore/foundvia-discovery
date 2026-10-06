@@ -33,7 +33,8 @@ def check(root):
                 errors.append(f'{path.relative_to(root)}: missing local target: {target}')
     skill = root / 'skills/foundvia-discovery'
     for item in ('SKILL.md', 'LICENSE', 'agents/openai.yaml', 'scripts/discovery_audit.py',
-                 'references/discovery.md', 'references/measurement.md', 'references/report-template.md'):
+                 'references/discovery.md', 'references/measurement.md', 'references/report-template.md',
+                 'assets/report.html', 'assets/fonts/geist-latin.woff2', 'assets/fonts/OFL.txt'):
         if not (skill / item).is_file():
             errors.append('Incomplete flagship skill: ' + item)
     return files, errors

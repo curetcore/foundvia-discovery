@@ -18,6 +18,7 @@ python3 skills/foundvia-discovery/scripts/discovery_audit.py https://example.com
 | Option | Behavior |
 |---|---|
 | `--format markdown` | Human-readable evidence and next actions (default) |
+| `--format html` | Standalone browser report with status filters and expandable evidence |
 | `--format json` | Resources, timestamps, findings, and limitations |
 | `--sitemap-children N` | Inspect up to N unique same-origin children of a sitemap index; 0–5, default 0. One level only; coverage and skipped locations are reported |
 | `--timeout N` | Per-network-operation timeout in seconds; default 10, maximum 30. Not a whole-run deadline |
@@ -81,3 +82,13 @@ A URL found in a parsed child gets an observed membership PASS. A missing URL in
 JSON version 0.4.0 adds `sitemap_coverage`: configured limit, declared entries, requested/parsed children, membership, matching files, and partial coverage. Default network behavior remains unchanged. Each extra child has its own timeout and byte cap; there is no whole-run deadline. This checks listing, not actual Google indexing or ChatGPT citations.
 
 [Child-inspection validation record](sitemap-child-validation.md).
+
+## Browser report
+
+```bash
+python3 discovery.py audit https://example.com --format html > audit.html
+```
+
+Open the saved file in a browser. It includes styles, filtering code and the Geist font; no external requests are needed to display it. Resource links open only when clicked. Print styles expand all findings for printing, then restore the selected filter. Without JavaScript, all findings remain readable and expandable. The same scope, evidence and exit codes apply to every format.
+
+Fetched text is escaped before inclusion. Non-HTTP(S) resource locations are displayed as text instead of links. Reports can contain page metadata and URLs: inspect them before sharing. The bundled font uses the SIL Open Font License; its full license is retained in every HTML export.
