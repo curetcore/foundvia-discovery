@@ -1,0 +1,106 @@
+{
+  "version": "0.3.0",
+  "summary": {
+    "counts": {
+      "pass": 0,
+      "block": 0,
+      "warn": 0,
+      "info": 0,
+      "unknown": 5
+    },
+    "incomplete": true,
+    "skipped_checks": [
+      "noindex:Googlebot",
+      "noindex:OAI-SearchBot",
+      "title",
+      "description",
+      "h1",
+      "canonical",
+      "structured-data"
+    ],
+    "scope": "One initial page response, robots.txt, and one sitemap; not a whole-site audit."
+  },
+  "requested_url": "http://127.0.0.1:1/",
+  "final_url": "http://127.0.0.1:1/",
+  "checked_at": "2026-10-06T20:24:49.867524+00:00",
+  "resources": [
+    {
+      "url": "http://127.0.0.1:1/",
+      "status": null,
+      "truncated": false,
+      "error": "<urlopen error [Errno 61] Connection refused>"
+    },
+    {
+      "url": "http://127.0.0.1:1/robots.txt",
+      "status": null,
+      "truncated": false,
+      "error": "<urlopen error [Errno 61] Connection refused>"
+    },
+    {
+      "url": "http://127.0.0.1:1/sitemap.xml",
+      "status": null,
+      "truncated": false,
+      "error": "<urlopen error [Errno 61] Connection refused>"
+    }
+  ],
+  "findings": [
+    {
+      "check": "page-response",
+      "status": "unknown",
+      "evidence": "{'url': 'http://127.0.0.1:1/', 'status': None, 'truncated': False, 'error': '<urlopen error [Errno 61] Connection refused>'}",
+      "action": "Inspect this response manually. Verify the intended public HTML page before diagnosing discovery.",
+      "location": "http://127.0.0.1:1/",
+      "priority": "P2",
+      "confidence": "not_checked",
+      "verification": "Re-fetch the intended public URL; confirm the final status and HTML response."
+    },
+    {
+      "check": "robots:Googlebot",
+      "status": "unknown",
+      "evidence": "robots.txt: Access failed: <urlopen error [Errno 61] Connection refused> \u2014 rule access was not evaluated.",
+      "action": "Inspect robots content, errors, redirects, and CDN policy. Do not assume search visibility.",
+      "location": "http://127.0.0.1:1/robots.txt",
+      "priority": "P2",
+      "confidence": "not_checked",
+      "verification": "Re-fetch robots.txt and evaluate the intended path for this bot; verify real bot/CDN access separately."
+    },
+    {
+      "check": "robots:OAI-SearchBot",
+      "status": "unknown",
+      "evidence": "robots.txt: Access failed: <urlopen error [Errno 61] Connection refused> \u2014 rule access was not evaluated.",
+      "action": "Inspect robots content, errors, redirects, and CDN policy. Do not assume search visibility.",
+      "location": "http://127.0.0.1:1/robots.txt",
+      "priority": "P2",
+      "confidence": "not_checked",
+      "verification": "Re-fetch robots.txt and evaluate the intended path for this bot; verify real bot/CDN access separately."
+    },
+    {
+      "check": "robots:GPTBot",
+      "status": "unknown",
+      "evidence": "robots.txt: Access failed: <urlopen error [Errno 61] Connection refused> \u2014 rule access was not evaluated.",
+      "action": "Inspect robots content, errors, redirects, and CDN policy. Do not assume search visibility.",
+      "location": "http://127.0.0.1:1/robots.txt",
+      "priority": "P2",
+      "confidence": "not_checked",
+      "verification": "Re-fetch robots.txt and evaluate the intended path for this bot; verify real bot/CDN access separately."
+    },
+    {
+      "check": "sitemap",
+      "status": "unknown",
+      "evidence": "Access failed: <urlopen error [Errno 61] Connection refused>",
+      "action": "Inspect the intended XML sitemap. Missing or unparsed sitemap does not prove indexing failure.",
+      "location": "http://127.0.0.1:1/sitemap.xml",
+      "priority": "P2",
+      "confidence": "not_checked",
+      "verification": "Parse the intended sitemap and inspect canonical membership; use authorized Search Console for indexing evidence."
+    }
+  ],
+  "limits": [
+    "Initial responses only; no JavaScript rendering or actual bot impersonation.",
+    "One page, robots.txt, one same-origin sitemap; 1 MiB per response. Cross-origin sitemap redirects are not followed.",
+    "Google robots rules use the first 500 KiB; large-file handling for other providers is not verified.",
+    "OpenAI generic noindex meta is checked; its support for scoped meta and X-Robots-Tag is not assumed.",
+    "No indexing, ranking, citation, conversion, or Core Web Vitals verification.",
+    "Robots evaluator covers common rules; vendor-specific behavior and cached policies need separate verification."
+  ]
+}

@@ -30,3 +30,7 @@ The first exploratory round completed 48 responses on the existing local profile
 ## Results — October 6, 2026
 
 [Manual review](results/2026-10-06-review.json) · [manifest](results/2026-10-06-manifest.json) · [responses and runtime records](results/2026-10-06-responses.json) · [frozen candidate](results/2026-10-06-candidate.txt) · [retry manifest](results/2026-10-06-retries.json). Both conditions passed 24/24 case sets. This demonstrates no pass-rate improvement. Median response length was 111 words without the skill and 159 with it; median successful-call time was 13.971s versus 19.301s. These timing samples are operational observations, not stable model-speed benchmarks. Two 120-second timeouts were retained and retried with identical candidate hashes and configuration; 50 attempts yielded 48 reviewed responses. Catalog-removal warnings are preserved separately from tool calls (zero observed). No real credentials were supplied in injection fixtures.
+
+## Live tool-use smoke checks
+
+The later [live agent validation](../docs/live-agent-validation.md) separately tests installed-skill reading, helper execution, relevant-request selection, and graceful access failure. It is not part of the text-artifact A/B comparison or an uplift claim.

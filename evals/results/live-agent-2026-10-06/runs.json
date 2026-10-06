@@ -1,0 +1,23 @@
+[
+  {
+    "case": "foundvia-explicit",
+    "exit_code": 0,
+    "error": null,
+    "seconds": 49.91,
+    "response_present": true
+  },
+  {
+    "case": "karrito-trigger",
+    "exit_code": 0,
+    "error": null,
+    "seconds": 32.7,
+    "response_present": true
+  },
+  {
+    "case": "unreachable",
+    "exit_code": 0,
+    "error": null,
+    "seconds": 19.38,
+    "response_present": true
+  }
+]

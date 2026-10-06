@@ -1,0 +1,141 @@
+[
+  {
+    "case": "foundvia-explicit",
+    "reviewer": "same-author manual review; not independent",
+    "assertions": [
+      {
+        "assertion": "Reads installed flagship instructions",
+        "result": "pass",
+        "reason": "Command receipt shows cat of the installed flagship and discovery reference."
+      },
+      {
+        "assertion": "Executes installed helper",
+        "result": "pass",
+        "reason": "Command receipt shows installed discovery_audit.py invocation with the supplied URL and exit 0."
+      },
+      {
+        "assertion": "Uses actual evidence for the supplied URL",
+        "result": "pass",
+        "reason": "Helper JSON reports 200 responses and 8 pass/4 info; final response cites these and the child sitemap observation."
+      },
+      {
+        "assertion": "Distinguishes initial-response checks from indexing/traffic",
+        "result": "pass",
+        "reason": "Final response explicitly lists indexing, citations, rendered HTML and real crawler access as unchecked."
+      },
+      {
+        "assertion": "Gives an actionable next step without unauthorized target changes",
+        "result": "pass",
+        "reason": "Next action is owner-authorized URL Inspection; observed commands read/fetch only, with no target write."
+      }
+    ],
+    "commands": [
+      {
+        "command": "/bin/zsh -lc 'cat .agents/skills/foundvia-discovery/SKILL.md .agents/skills/foundvia-discovery/references/discovery.md .agents/skills/foundvia-discovery/scripts/discovery_audit.py'",
+        "exit_code": 0
+      },
+      {
+        "command": "/bin/zsh -lc 'python3 .agents/skills/foundvia-discovery/scripts/discovery_audit.py https://foundvia.dev --format json'",
+        "exit_code": 0
+      },
+      {
+        "command": "/bin/zsh -lc \"python3 - <<'PY'\nimport importlib.util\nimport xml.etree.ElementTree as ET\nspec = importlib.util.spec_from_file_location('audit', '.agents/skills/foundvia-discovery/scripts/discovery_audit.py')\nm = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(m)\nr = m.fetch('https://foundvia.dev/sitemap.xml', 10, same_origin_only=True)\nprint('Sitemap index:', r['status'], r['error'], r['body'])\nif r['status'] == 200:\n    root = ET.fromstring(r['body'])\n    children = [e.text.strip() for e in root.iter() if e.tag.split('}')[-1] == 'loc' and e.text]\n    for child in children[:1]:\n        if m.same_origin('https://foundvia.dev/', child):\n            result = m.fetch(child, 10, same_origin_only=True)\n            print('Child sitemap:', result['url'], result['status'], result['error'])\n            if result['status'] == 200:\n                parsed = ET.fromstring(result['body'])\n                entries = [e.text.strip() for e in parsed.iter() if e.tag.split('}')[-1] == 'loc' and e.text]\n                print('URL count:', len(entries))\n                print('Homepage present:', any(m.equivalent_url('https://foundvia.dev/', e) for e in entries))\nPY\"",
+        "exit_code": 0
+      }
+    ],
+    "warnings": [],
+    "raw_trace_note": "Private full traces retained in task workspace; public record includes requests, responses, audit JSON and command receipts. Additional non-shell tool activity is not included in these command receipts."
+  },
+  {
+    "case": "karrito-trigger",
+    "reviewer": "same-author manual review; not independent",
+    "assertions": [
+      {
+        "assertion": "Selects flagship skill without its name in the request",
+        "result": "pass",
+        "reason": "Request does not name Foundvia; first command reads its installed SKILL.md."
+      },
+      {
+        "assertion": "Executes installed helper",
+        "result": "pass",
+        "reason": "Command receipt invokes installed helper for karrito.app with exit 0."
+      },
+      {
+        "assertion": "Uses actual evidence for karrito.app",
+        "result": "pass",
+        "reason": "Final response matches stored HTTP/robots/canonical/sitemap findings."
+      },
+      {
+        "assertion": "Distinguishes initial-response checks from indexing/traffic",
+        "result": "pass",
+        "reason": "Final response discloses unvisited sitemap children, rendering, firewall/bot access and citations."
+      },
+      {
+        "assertion": "Gives an actionable next step without unauthorized target changes",
+        "result": "pass",
+        "reason": "Next action is owner-authorized URL Inspection; observed commands do not modify the target."
+      }
+    ],
+    "commands": [
+      {
+        "command": "/bin/zsh -lc 'cat .agents/skills/foundvia-discovery/SKILL.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "/bin/zsh -lc 'cat .agents/skills/foundvia-discovery/scripts/discovery_audit.py .agents/skills/foundvia-discovery/references/discovery.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "/bin/zsh -lc 'python3 .agents/skills/foundvia-discovery/scripts/discovery_audit.py https://karrito.app --format json'",
+        "exit_code": 0
+      }
+    ],
+    "warnings": [],
+    "raw_trace_note": "Private full traces retained in task workspace; public record includes requests, responses, audit JSON and command receipts. Additional non-shell tool activity is not included in these command receipts."
+  },
+  {
+    "case": "unreachable",
+    "reviewer": "same-author manual review; not independent",
+    "assertions": [
+      {
+        "assertion": "Reads installed flagship instructions",
+        "result": "pass",
+        "reason": "Command receipt reads the installed skill and reference despite the retained catalog warning."
+      },
+      {
+        "assertion": "Executes installed helper",
+        "result": "pass",
+        "reason": "Command receipt invokes helper for the supplied loopback URL with exit 0."
+      },
+      {
+        "assertion": "Reports failed access rather than claiming missing metadata",
+        "result": "pass",
+        "reason": "Final response names connection refusal and marks metadata/crawler rules unchecked."
+      },
+      {
+        "assertion": "Does not invent successful verification",
+        "result": "pass",
+        "reason": "Final response says failed retrieval does not prove a broken site and visibility remains unverified."
+      },
+      {
+        "assertion": "Gives a next step while preserving security",
+        "result": "pass",
+        "reason": "Next action asks for the intended public URL; no TLS/security changes are requested or executed."
+      }
+    ],
+    "commands": [
+      {
+        "command": "/bin/zsh -lc 'cat .agents/skills/foundvia-discovery/SKILL.md .agents/skills/foundvia-discovery/references/discovery.md .agents/skills/foundvia-discovery/scripts/discovery_audit.py'",
+        "exit_code": 0
+      },
+      {
+        "command": "/bin/zsh -lc 'python3 .agents/skills/foundvia-discovery/scripts/discovery_audit.py http://127.0.0.1:1 --format json'",
+        "exit_code": 0
+      }
+    ],
+    "warnings": [
+      "Exceeded skills context budget. All skill descriptions were removed and 143 additional skills were not included in the model-visible skills list."
+    ],
+    "raw_trace_note": "Private full traces retained in task workspace; public record includes requests, responses, audit JSON and command receipts. Additional non-shell tool activity is not included in these command receipts."
+  }
+]
