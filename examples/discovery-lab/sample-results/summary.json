@@ -1,0 +1,23 @@
+{
+  "kind": "controlled-local-fixture-not-growth-evidence",
+  "python": "3.14.7",
+  "first_json_report_seconds": 0.0874,
+  "timing_scope": "Server ready to first CLI JSON report; excludes prerequisite installation, reading and human actions.",
+  "stages": {
+    "before": {
+      "exit_code": 1,
+      "blocks": [
+        "noindex:Googlebot",
+        "noindex:OAI-SearchBot"
+      ]
+    },
+    "after": {
+      "exit_code": 0,
+      "blocks": []
+    },
+    "clean": {
+      "exit_code": 0,
+      "blocks": []
+    }
+  }
+}

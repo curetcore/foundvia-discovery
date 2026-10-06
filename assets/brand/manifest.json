@@ -1,0 +1,30 @@
+{
+  "status": "O2 visual direction approved by founder on 2026-10-06",
+  "verified_on": "2026-10-06",
+  "live_url": "https://foundvia.dev/",
+  "live_logo_url": "https://foundvia.dev/foundvia/logo.svg",
+  "live_font_family": "Geist, \"Geist Fallback\"",
+  "wordmark_status": "existing provisional outlines retained",
+  "permission_basis": "Founder requested Foundvia branding for the open-source Foundvia project; identifying use only, no trademark grant implied",
+  "assets": [
+    {
+      "file": "logo-on-dark.svg",
+      "sha256": "400850e668bc5619a2b7a481a61ccc1f1194309055bd7c0fee6c6a0a895f4484",
+      "origin": "Foundvia public/foundvia/logo.svg (matches live bytes)",
+      "bytes": 38877,
+      "source_sha256": "e0fcec3a5ecf7eecf9392aac4e21b2a80773470f5fb778bdd92673a522bd22d1",
+      "normalization": "One final newline; vector paths and embedded image unchanged"
+    },
+    {
+      "file": "logo-on-light.svg",
+      "sha256": "7a810e530cfd31f2534288b8a0b9a791831552f40b777b14a9a6f2ae39363f57",
+      "origin": "Theme variant of current logo; only wordmark fills changed to #18181b and #52525b; embedded flame unchanged",
+      "bytes": 38877,
+      "source_sha256": "453f7e0e8996884330b4c68280f38af09a9f522d32779c83e699364d0193ff2c",
+      "normalization": "One final newline; vector paths and embedded image unchanged"
+    }
+  ],
+  "live_logo_sha256": "e0fcec3a5ecf7eecf9392aac4e21b2a80773470f5fb778bdd92673a522bd22d1",
+  "historical_inventory_drift": "brand/v1 inventory dark-logo hash differs from current public alias; current local alias matches live bytes",
+  "approval": "User message: aprobado"
+}

@@ -2,6 +2,7 @@
 """Bounded initial-response discovery audit. Python 3.10+, standard library only."""
 import argparse
 import datetime as dt
+import http.client
 from html.parser import HTMLParser
 import json
 import re
@@ -14,9 +15,12 @@ import xml.etree.ElementTree as ET
 MAX_BYTES = 1024 * 1024
 USER_AGENT = "FoundviaDiscovery/0.1 (+https://github.com/ronaldships/foundvia-discovery)"
 BOTS = ("Googlebot", "OAI-SearchBot", "GPTBot")
+GOOGLE_ROBOTS_BYTES = 500 * 1024
 
 
 def clean_url(value):
+    if any(character.isspace() or ord(character) < 32 or ord(character) == 127 for character in value):
+        raise ValueError("URL whitespace/control characters must be percent-encoded.")
     parts = url.urlsplit(value)
     if parts.scheme not in ("http", "https") or not parts.hostname or parts.username or parts.password:
         raise ValueError("Use an http(s) URL without credentials.")
@@ -24,11 +28,30 @@ def clean_url(value):
     return url.urlunsplit(parts._replace(fragment="", path=parts.path or "/"))
 
 
-def fetch(target, timeout):
+def same_origin(left, right):
+    def origin(value):
+        p = url.urlsplit(clean_url(value))
+        return p.scheme, p.hostname.lower(), p.port if p.port is not None else (443 if p.scheme == "https" else 80)
+    return origin(left) == origin(right)
+
+
+class ScopedRedirect(urllib.request.HTTPRedirectHandler):
+    def __init__(self, origin=None):
+        self.origin = origin
+
+    def redirect_request(self, request, fp, code, message, headers, newurl):
+        clean_url(newurl)
+        if self.origin and not same_origin(self.origin, newurl):
+            raise ValueError("Redirect outside the permitted sitemap origin was not followed.")
+        return super().redirect_request(request, fp, code, message, headers, newurl)
+
+
+def fetch(target, timeout, same_origin_only=False):
     try:
         request = urllib.request.Request(target, headers={"User-Agent": USER_AGENT, "Accept-Encoding": "identity"})
         try:
-            response = urllib.request.urlopen(request, timeout=timeout)
+            opener = urllib.request.build_opener(ScopedRedirect(target if same_origin_only else None))
+            response = opener.open(request, timeout=timeout)
         except urllib.error.HTTPError as exc:
             response = exc
         with response:
@@ -41,7 +64,7 @@ def fetch(target, timeout):
                 "body": raw[:MAX_BYTES].decode(headers.get_content_charset() or "utf-8", errors="replace"),
                 "truncated": len(raw) > MAX_BYTES, "error": None,
             }
-    except (urllib.error.URLError, TimeoutError, OSError, ValueError, LookupError) as exc:
+    except (urllib.error.URLError, http.client.HTTPException, TimeoutError, OSError, ValueError, LookupError) as exc:
         return {"url": target, "status": None, "body": "", "truncated": False, "error": str(exc)}
 
 
@@ -99,7 +122,9 @@ def robots_groups(text):
             if rules:
                 groups.append((agents, rules))
                 agents, rules = [], []
-            agents.append(value.lower())
+            # Product tokens exclude trailing version/wildcard decorations.
+            token = re.match(r"^[a-z_-]+", value.lower())
+            agents.append("*" if value == "*" else token[0] if token else "")
         elif field in ("allow", "disallow") and agents:
             # Empty rules have no effect but still separate the next group.
             rules.append((field, value))
@@ -120,7 +145,7 @@ def robots_decision(text, bot, target):
     groups, _ = robots_groups(text)
     candidates = []
     for agents, rules in groups:
-        lengths = [len(a) for a in agents if a != "*" and a in bot.lower()]
+        lengths = [len(a) for a in agents if a and a != "*" and a in bot.lower()]
         if lengths or "*" in agents:
             candidates.append((max(lengths, default=0), rules))
     specificity = max((size for size, _ in candidates), default=-1)
@@ -146,7 +171,7 @@ def robots_decision(text, bot, target):
 def noindex_evidence(page, headers, bot):
     results = []
     for agent, value in page.robots:
-        if agent in ("robots", bot.lower()) and re.search(r"\b(noindex|none)\b", value, re.I):
+        if agent in ("robots", bot.lower()) and any(p.strip().lower() in ("noindex", "none") for p in value.split(",")):
             results.append("meta " + agent + ": " + value)
     for value in headers:
         agent = "robots"
@@ -166,10 +191,22 @@ def audit(target, timeout=10):
     findings, resources = [], []
 
     def record(check, status, evidence, action):
-        findings.append(dict(check=check, status=status, evidence=evidence, action=action))
+        verification = {
+            "page-response": "Re-fetch the intended public URL; confirm the final status and HTML response.",
+            "noindex": "Inspect initial and rendered metadata plus response headers; verify only authorized changes on the published page.",
+            "robots": "Re-fetch robots.txt and evaluate the intended path for this bot; verify real bot/CDN access separately.",
+            "sitemap": "Parse the intended sitemap and inspect canonical membership; use authorized Search Console for indexing evidence.",
+            "canonical": "Compare the intended canonical with the rendered link and redirect destination.",
+            "structured-data": "Validate actual JSON-LD contents and rendered markup against the eligible page type.",
+        }.get(check.split(":")[0], "Inspect the initial and rendered page; confirm that the content describes the actual product.")
+        findings.append(dict(check=check, status=status, evidence=evidence, action=action,
+                             location=resources[-1]["url"] if resources else target,
+                             priority={"block": "P1", "unknown": "P2", "warn": "P2", "info": "P3", "pass": None}[status],
+                             confidence="not_checked" if status == "unknown" else "observed",
+                             verification=verification))
 
-    def request(location):
-        result = fetch(location, timeout)
+    def request(location, same_origin_only=False):
+        result = fetch(location, timeout, same_origin_only=True) if same_origin_only else fetch(location, timeout)
         resources.append({k: v for k, v in result.items() if k != "body"})
         return result
 
@@ -185,6 +222,13 @@ def audit(target, timeout=10):
         page.feed(response["body"])
         for bot in ("Googlebot", "OAI-SearchBot"):
             evidence = noindex_evidence(page, response.get("x_robots_tag", []), bot)
+            # Google documents scoped metadata and headers. OpenAI documents generic
+            # noindex meta; do not present Google's full directive grammar as its policy.
+            if bot == "OAI-SearchBot":
+                generic = ["meta robots: " + v for a, v in page.robots if a == "robots" and "noindex" in [s.strip().lower() for s in v.split(",")]]
+                record("noindex:" + bot, "block" if generic else "info", "; ".join(generic) or "No generic noindex meta observed; provider-specific headers and scoped directives are not verified.",
+                       "OpenAI documents generic noindex meta for excluding links; preserve intentional exclusions and verify current publisher guidance.")
+                continue
             record("noindex:" + bot, "block" if evidence else "pass", "; ".join(evidence) or "No applicable noindex observed in initial response.",
                    "Confirm whether exclusion is intentional; remove only on pages meant for search." if evidence else "Confirm rendered metadata if JavaScript modifies the page.")
         title = " ".join(" ".join(page.title).split())
@@ -200,7 +244,15 @@ def audit(target, timeout=10):
     robots_ok = robots["status"] == 200 and not robots["truncated"] and robots.get("content_type") == "text/plain"
     for bot in BOTS:
         if robots_ok:
-            allowed, evidence = robots_decision(robots["body"], bot, final)
+            rules = robots["body"]
+            if bot == "Googlebot":
+                rules = rules.encode("utf-8")[:GOOGLE_ROBOTS_BYTES].decode("utf-8", errors="ignore")
+            elif len(rules.encode("utf-8")) > GOOGLE_ROBOTS_BYTES:
+                record("robots:" + bot, "unknown", "robots.txt exceeds 500 KiB; this provider's size handling was not verified.", "Review the provider's parser limits and reduce the file without changing intended policy.")
+                continue
+            allowed, evidence = robots_decision(rules, bot, final)
+            if bot == "Googlebot" and len(robots["body"].encode("utf-8")) > GOOGLE_ROBOTS_BYTES:
+                evidence += " (Google's first 500 KiB only)"
             status = ("pass" if allowed else "block") if bot != "GPTBot" else "info"
             record("robots:" + bot, status, ("Allowed — " if allowed else "Disallowed — ") + evidence,
                    "Training policy is independent of search; preserve the publisher's choice." if bot == "GPTBot" else "Review accidental restrictions and verify CDN bot access separately.")
@@ -208,10 +260,21 @@ def audit(target, timeout=10):
             google_missing = bot == "Googlebot" and robots["status"] is not None and 400 <= robots["status"] < 500 and robots["status"] != 429
             record("robots:" + bot, "info" if google_missing else "unknown", "robots.txt HTTP " + str(robots["status"]) + (" — Google treats this 4xx as no robots restrictions." if google_missing else " — rule access was not evaluated."), "Inspect robots content, errors, redirects, and CDN policy. Do not assume search visibility.")
     _, declared = robots_groups(robots["body"] if robots_ok else "")
-    origin_parts = url.urlsplit(origin)
-    candidates = [u for u in declared if (url.urlsplit(u).scheme, url.urlsplit(u).netloc) == (origin_parts.scheme, origin_parts.netloc) and not url.urlsplit(u).username]
+    candidates = []
+    skipped = []
+    for candidate in declared:
+        try:
+            candidate = clean_url(candidate)
+            if same_origin(origin, candidate):
+                candidates.append(candidate)
+            else:
+                skipped.append("Declared cross-origin sitemap not fetched.")
+        except ValueError:
+            skipped.append("Malformed sitemap declaration ignored.")
+    if skipped:
+        record("sitemap-selection", "info", " ".join(dict.fromkeys(skipped)), "Review declared sitemap locations manually; cross-origin sitemaps can be valid but are outside this helper's scope.")
     sitemap_url = candidates[0] if candidates else origin + "/sitemap.xml"
-    sitemap = request(sitemap_url)
+    sitemap = request(sitemap_url, same_origin_only=True)
     try:
         if sitemap["status"] != 200 or sitemap["truncated"]:
             raise ValueError("HTTP " + str(sitemap["status"]) + "; truncated=" + str(sitemap["truncated"]))
@@ -226,15 +289,17 @@ def audit(target, timeout=10):
             record("sitemap", "pass" if final in entries else "warn", str(len(entries)) + " URLs; audited URL " + ("present." if final in entries else "not found in this file."), "This samples one file. Include intended canonical URLs; missing membership is not an indexing prohibition.")
     except (ValueError, ET.ParseError) as exc:
         record("sitemap", "unknown", str(exc), "Inspect the intended XML sitemap. Missing or unparsed sitemap does not prove indexing failure.")
-    return dict(version="0.1.0", requested_url=target, final_url=final,
+    return dict(version="0.2.0", requested_url=target, final_url=final,
                 checked_at=dt.datetime.now(dt.timezone.utc).isoformat(), resources=resources, findings=findings,
-                limits=["Initial responses only; no JavaScript rendering or actual bot impersonation.", "One page, robots.txt, one same-origin sitemap; 1 MiB per response.", "No indexing, ranking, citation, conversion, or Core Web Vitals verification.", "Robots evaluator covers common rules; vendor-specific behavior and cached policies need separate verification."])
+                limits=["Initial responses only; no JavaScript rendering or actual bot impersonation.", "One page, robots.txt, one same-origin sitemap; 1 MiB per response. Cross-origin sitemap redirects are not followed.", "Google robots rules use the first 500 KiB; large-file handling for other providers is not verified.", "OpenAI generic noindex meta is checked; its support for scoped meta and X-Robots-Tag is not assumed.", "No indexing, ranking, citation, conversion, or Core Web Vitals verification.", "Robots evaluator covers common rules; vendor-specific behavior and cached policies need separate verification."])
 
 
 def markdown(report):
     lines = ["# Discovery audit", "", "URL: " + report["final_url"], "Checked: " + report["checked_at"], ""]
     for finding in report["findings"]:
-        lines += ["## " + finding["status"].upper() + " · " + finding["check"], "", finding["evidence"], "", "Next: " + finding["action"], ""]
+        lines += ["## " + finding["status"].upper() + " · " + finding["check"], "", "Location: " + finding["location"],
+                  "Priority: " + (finding["priority"] or "none") + " · Confidence: " + finding["confidence"], "",
+                  finding["evidence"], "", "Next: " + finding["action"], "", "Verify: " + finding["verification"], ""]
     return "\n".join(lines + ["## Limits", ""] + ["- " + item for item in report["limits"]])
 
 

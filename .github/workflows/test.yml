@@ -15,3 +15,5 @@ jobs:
         with:
           node-version: '22.18.0'
       - run: node tests/test_dates.mjs
+      - run: npm ci --ignore-scripts
+      - run: node --test tests/test_seo.mjs

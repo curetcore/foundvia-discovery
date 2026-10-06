@@ -1,128 +1,125 @@
-<div align="center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/discovery-cover-dark.svg">
+  <img src="assets/discovery-cover-light.svg" alt="Foundvia Discovery. You shipped it. Now get found. Audit, fix, verify." width="1200">
+</picture>
 
-![Foundvia Discovery — help your SaaS get found](assets/discovery-cover.svg)
+# Foundvia Discovery
 
-**An open-source discovery toolkit from [Foundvia](https://foundvia.dev).**
+**Find what blocks your public SaaS pages on Google and ChatGPT. Fix one verified problem. Measure the next step.**
 
-Find what blocks your SaaS on Google and ChatGPT. Fix it. Measure what happens.
+An open-source toolkit from [Foundvia](https://foundvia.dev), built by [Ronaldo Paulino](https://x.com/ronaldships). A small Python auditor, a coding-agent skill, and a practical guide for your first 100 visits.
 
-[![MIT](https://img.shields.io/badge/license-MIT-18181b)](LICENSE)
-[![Python](https://img.shields.io/badge/auditor-Python_3.10%2B-18181b)](skills/foundvia-discovery/scripts/discovery_audit.py)
-[![Dependencies](https://img.shields.io/badge/runtime_dependencies-zero-166534)](docs/auditor.md)
+[Start auditing](#run-your-first-audit) · [First 100 visits](playbook/first-100-visits.md) · [Español](README.es.md)
 
-[Start here](#start-with-your-site) · [Install the skill](#use-it-with-your-ai-agent) · [First 100 visits](playbook/first-100-visits.md) · [How it compares](docs/skill-review.md) · [Español](README.es.md)
+**Python 3.10+ · No runtime dependencies · [MIT code and docs](LICENSE)**
 
-</div>
+## Run your first audit
 
-## Start with your site
+Clone or download this repository using GitHub's **Code** button. Open the downloaded folder in your terminal. You need Python installed; check with `python3 --version`.
 
-You shipped a useful product. Now you need to know whether people—and search crawlers—can find it.
-
-```bash
-git clone https://github.com/ronaldships/foundvia-discovery.git
-cd foundvia-discovery
-python3 skills/foundvia-discovery/scripts/discovery_audit.py https://your-site.com
-```
-
-No API keys. No paid crawler. No account. Python 3.10 or newer.
-
-The auditor returns **evidence and a next action**, not a made-up ranking score. It checks one page, robots rules, and one sitemap. It does not run JavaScript or prove that your site is indexed.
-
-Illustrative output:
-
-```text
-BLOCK · noindex:Googlebot
-meta robots: noindex
-Next: Confirm whether exclusion is intentional; remove only on public search pages.
-
-PASS · robots:OAI-SearchBot
-Allowed — Allow: /
-
-INFO · robots:GPTBot
-Disallowed — Disallow: /
-Next: Training policy is independent of search; preserve the publisher's choice.
-```
-
-[Auditor options and limits →](docs/auditor.md)
-
-## Use it with your AI agent
-
-Install just the flagship skill with the [Skills CLI](https://github.com/vercel-labs/skills):
+Audit **one intended public page**. Replace the URL with yours:
 
 ```bash
-npx skills add ronaldships/foundvia-discovery --skill foundvia-discovery
+python3 \
+discovery.py audit \
+https://example.com \
+> audit.md
 ```
 
-Or copy the self-contained `skills/foundvia-discovery` folder into your agent's skill directory. See [installation](docs/install.md).
+Open `audit.md` in your editor. Each finding includes **evidence, a next action and a verification step**. No account or API key is needed.
+
+The auditor reads the initial page response, robots rules and one sitemap. It does not render JavaScript, impersonate a crawler, or prove indexing, rankings or traffic. [Options and limits →](docs/auditor.md)
+
+## See a blocker become a verified change
+
+Try the controlled local example:
+
+```bash
+python3 \
+discovery.py practice
+```
+
+Open `outputs-local/discovery-lab/before.md`, then `after.md`. The command starts a temporary server on your own computer and stops it afterward.
+
+**Actual local finding:** the public guide contains a generic HTML `noindex` tag. The screenshot below shows an excerpt of the recorded Googlebot finding, presented in a readable report view. [Full generated report →](examples/discovery-lab/sample-results/before.md)
+
+<img src="assets/report-example.png" alt="Recorded local audit excerpt. BLOCK noindex:Googlebot. Evidence: meta robots: noindex. Next: confirm whether exclusion is intentional; remove only on public search pages." width="640">
+
+1. **Before:** Googlebot and OAI-SearchBot noindex blocks.
+2. **Change:** remove only the accidental noindex element.
+3. **After:** no observed blocks in the corrected page or clean re-audit.
+
+GPTBot remains blocked in all three stages: training preferences are independent of search access. This example verifies a technical change; it demonstrates no organic growth. [Run and inspect the lab →](examples/discovery-lab/README.md)
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/discovery-path-dark.svg">
+  <img src="assets/discovery-path-light.svg" alt="Read the evidence, make one authorized change, rerun and compare. A clear report does not prove traffic." width="640">
+</picture>
+
+## Use the skill with your coding agent
+
+Install **just the flagship skill** with the [Skills CLI](https://github.com/vercel-labs/skills):
+
+```bash
+org=ronaldships
+fv=foundvia-discovery
+npx skills add \
+"$org/$fv" \
+--skill \
+foundvia-discovery
+```
 
 Then ask:
 
-> Use foundvia-discovery to audit https://my-saas.com. Show the evidence, fix the blockers in my repo, and propose one useful page to help me reach my first 100 visits. Keep deployment separate.
+> Use foundvia-discovery to audit my public page. Show the evidence and propose one small fix in my repo. Keep training preferences and private areas intact. Verify the change; keep deployment separate.
 
-The skill supports four modes:
+The skill can help inspect, fix, plan a useful page and measure results when you provide the necessary tools, evidence and authorization. The Python auditor also works on its own.
 
-| Mode | What you get |
-|---|---|
-| Audit | Observed blockers, evidence, confidence, and verification steps |
-| Fix | Scoped code changes and checks when you provide code access and authorization |
-| Launch | A customer question, content brief, original evidence, and relevant distribution venue |
-| Measure | Visits and conversion signals with consistent dates and attribution limits |
+Local copy-install and supplied-artifact evaluation were tested with Codex CLI. Other agents have installation instructions, not a blanket compatibility certification. In the 48-response evaluation, both the skill and model-only baseline passed the case rubric; no pass-rate improvement was demonstrated. [Installation →](docs/install.md) · [Evaluation evidence →](docs/quality-results.md)
 
-It works without a particular agent or hosting platform. The auditor requires Python; browser checks and analytics access depend on your environment.
+## Work toward your first 100 visits
 
-## Your first 100 visits
+Start with one useful page and a real question from your audience.
 
-A practical milestone: **100 measured sessions from Google organic and ChatGPT**, counted separately and then combined. It is a target, not a guarantee or deadline.
+1. Check access and fix one accidental blocker.
+2. Answer the question with a tested example.
+3. Share the answer where it is relevant and permitted.
+4. Review measured sessions and product outcomes each week.
 
-![The discovery path: access, clarity, evidence, measure](assets/discovery-path.svg)
+The milestone is **100 measured sessions from Google organic and observed ChatGPT referrals**, counted separately and then combined. Sessions are not unique people, signups or sales. There is no promised deadline or provider endorsement.
 
-1. **Remove blockers.** Inspect HTTP responses, noindex, robots, canonicals, and the sitemap.
-2. **Answer a real question.** Use a tested tutorial, an honest comparison, or a product page with original evidence.
-3. **Make it reachable.** Add relevant internal links and submit the correct sitemap in Search Console.
-4. **Measure arrivals and useful actions.** Keep Search Console clicks, analytics sessions, signups, and payments separate.
+[Follow the beginner guide →](playbook/first-100-visits.md) · [Copy the weekly tracker →](templates/weekly-tracker.csv)
 
-[Read the English guide →](playbook/first-100-visits.md) · [Copy the report template →](skills/foundvia-discovery/references/report-template.md) · [Blank tracking sheets →](templates/)
+## Know what the evidence covers
 
-## Why this exists
+- **Python auditor:** initial HTTP/HTML findings, common robots rules and one same-origin sitemap. JavaScript output, real crawler/CDN access and whole-site coverage need separate checks.
+- **Agent-assisted work:** scoped proposals or code changes using your tools and evidence. Deployment and live verification remain separate.
+- **Search Console:** Google's reported inspection and performance data. A live test does not guarantee indexing or search appearance.
+- **Analytics:** sessions and outcomes under your documented attribution rules. Missing referrers, copied UTMs and tracking gaps limit attribution.
 
-Foundvia Discovery grew out of the SEO + GEO Playbook. We are turning the playbook into something you can **run, inspect, and improve together**.
+**Verified locally:** 35 Python tests, a fresh-copy lab run and a three-stage before/after example. The helper declares Python 3.10+; these local runs used Python 3.14.7. [O3 validation](docs/quality-results.md) · [O4 validation](docs/first-visits-validation.md)
 
-The flagship includes an executable auditor, controlled-response tests, primary-source references, and behavioral evaluation scenarios. [The review](docs/skill-review.md) explains what we learned from public skills by Corey Haines, Vercel, and Anthropic—and which claims still need testing.
+## Find the next document
 
-We do not promise citations, traffic, or timelines. Search access does not imply training consent. `llms.txt` is optional documentation, not a Google ranking requirement. Publication dates must reflect actual events.
+- [First 100 visits](playbook/first-100-visits.md): the main beginner path, with official sources beside each step.
+- [Auditor reference](docs/auditor.md): commands, report fields and inspection limits.
+- [Launch worksheet](templates/launch-worksheet.md): one question, one page and one next action.
+- [Measurement dictionary](templates/measurement.md): how to count without mixing sessions, clicks and sales.
+- [Advanced skill modules](skills/README.md): optional reference after the first audit.
 
-## Advanced modules
+## Build this with us
 
-The original modules remain available for focused work. Several are still Spanish and contain historical examples; their quality-review status is explicit below. Start with the flagship, and verify provider-specific advice before applying older snippets.
+Found a wrong finding? Include a minimal public fixture, the command you ran, and expected versus actual behavior. Please remove credentials and customer data before sharing.
 
-| Module | Purpose | Review status |
-|---|---|---|
-| [foundvia-discovery](skills/foundvia-discovery/) | Public discovery audit → fixes → launch experiment → measurement | New; helper tested, model evaluations pending |
-| [seo-ai-geo](skills/seo-ai-geo/) | Search eligibility and independent crawler policies | Core guidance corrected; historical references marked |
-| [seo-slug-dates](skills/seo-slug-dates/) | Truthful content dates and migration away from generated history | Replaced fabricated-date guidance |
-| [seo-technical](skills/seo-technical/) | Technical SEO and performance | Legacy; full review pending |
-| [seo-on-page](skills/seo-on-page/) | Metadata, headings, links | Legacy; full review pending |
-| [seo-content-strategy](skills/seo-content-strategy/) | Customer problems and content | Legacy; full review pending |
-| [seo-local](skills/seo-local/) | Location-based businesses | Legacy; full review pending |
-| [seo-analytics](skills/seo-analytics/) | Search Console and traffic measurement | Legacy; full review pending |
-| [seo-growth-engine](skills/seo-growth-engine/) | Content and distribution at scale | Legacy; full review pending |
-| [seo-nextjs-implementation](skills/seo-nextjs-implementation/) | TypeScript metadata and schema helpers | Legacy; full review pending |
-| [seo-audit-website](skills/seo-audit-website/) | Optional squirrelscan integration | Third-party; not required by flagship |
-
-Historical examples in [examples/](examples/) are snapshots, not proof of current production behavior or causal results.
-
-## Build with us
-
-Run the tests:
+Run the Python checks locally:
 
 ```bash
-python3 -m unittest discover -s tests -v
+python3 -m unittest \
+discover -s tests -v
 ```
 
-Found an incorrect recommendation? Open an issue with the URL, evidence, and expected behavior. Have a real result? Share dates, what changed, and what you measured. No tokens or customer data.
+[Contributing](CONTRIBUTING.md) explains the workflow. If the toolkit helped you find a real issue, a star helps other builders discover it. Contributions with reproducible evidence make it more useful.
 
-[Contributing](CONTRIBUTING.md) · [Behavioral evaluation cases](evals/discovery-cases.json) · [Release notes](CHANGELOG.md) · [Distribution plan](docs/distribution.md)
+---
 
-If this helps you ship a useful fix, a star helps others discover the toolkit. Contributions and honest field reports help us improve it.
-
-Built by [Ronaldo Paulino](https://x.com/ronaldships) for [Foundvia](https://foundvia.dev). [MIT licensed](LICENSE).
+Code and documentation: [MIT](LICENSE). Identifying Foundvia assets: [brand provenance](docs/brand.md). Geist font: [SIL OFL 1.1](assets/fonts/OFL.txt). [Editable graphics and exports](assets/README.md).

@@ -29,3 +29,7 @@ cp -R skills/foundvia-discovery ~/.claude/skills/
 Choose one command for the agent you use. Restart or reload the agent if it does not discover the new skill. Other agents may use different paths; consult their own documentation.
 
 The skill does not include a background service, analytics account, paid API, or automatic deployment. Python 3.10+ is needed for the bundled helper; without it, an agent can inspect resources manually and state what it could not verify.
+
+## Verified candidate environment
+
+O3 tested a local project copy using Skills CLI 1.7.0 targeting Codex, including the whole flagship folder and its helper. Codex CLI 0.157.0 with gpt-6-astra was evaluated on supplied artifacts. Automatic skill selection and other agents were not tested. Manual paths above are installation examples, not a compatibility certification. The Python helper ran on Python 3.14.7; the copyable TypeScript helper checks ran with React 19.2.0 and Node 22.18.0/24.20.0. A full Next.js app build was not tested. The public install command installs the published branch, not an unpublished local candidate.

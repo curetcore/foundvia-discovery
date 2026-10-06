@@ -14,7 +14,7 @@
  * @see https://ogp.me/ for the Open Graph protocol
  */
 
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { createElement } from "react";
 
 // =============================================================================
@@ -28,13 +28,13 @@ export const SEO_CONFIG = {
     process.env.NEXT_PUBLIC_SITE_TITLE || "Brand — short tagline",
   defaultDescription:
     process.env.NEXT_PUBLIC_SITE_DESCRIPTION ||
-    "Replace this with a 150–160 character description that summarizes the site's value.",
+    "Replace this with a clear description of the page's value.",
   defaultImage: process.env.NEXT_PUBLIC_SITE_OG_IMAGE || "/og-image.png",
   twitterHandle: process.env.NEXT_PUBLIC_TWITTER_HANDLE || "@yourhandle",
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "hello@example.com",
   locale: process.env.NEXT_PUBLIC_LOCALE || "es_ES",
   themeColor: process.env.NEXT_PUBLIC_THEME_COLOR || "#6366f1",
-  // Edit this list with your real keywords. Keep it tight (5–10 max).
+  // Optional metadata; Google does not use the keywords meta tag for ranking.
   keywords: [
     "keyword 1",
     "keyword 2",
@@ -143,10 +143,11 @@ export function generateMetadata({
     : SEO_CONFIG.defaultTitle;
   const finalDescription = description || SEO_CONFIG.defaultDescription;
   const finalImage = image || SEO_CONFIG.defaultImage;
-  const finalUrl = url || SEO_CONFIG.siteUrl;
-  const absoluteImage = finalImage.startsWith("http")
-    ? finalImage
-    : `${SEO_CONFIG.siteUrl}${finalImage}`;
+  // A shared layout cannot infer the current route. Do not canonicalize every
+  // child page to the homepage when a caller omits its URL.
+  const finalUrl = url ? absoluteUrl(url) : undefined;
+  const canonicalUrl = canonical ? absoluteUrl(canonical) : finalUrl;
+  const absoluteImage = absoluteUrl(finalImage);
 
   const metadata: Metadata = {
     title: finalTitle,
@@ -156,9 +157,7 @@ export function generateMetadata({
     creator: SEO_CONFIG.siteName,
     publisher: SEO_CONFIG.siteName,
     metadataBase: new URL(SEO_CONFIG.siteUrl),
-    alternates: {
-      canonical: canonical || finalUrl,
-    },
+    alternates: canonicalUrl ? { canonical: canonicalUrl } : undefined,
     openGraph: {
       type: type === "article" ? "article" : "website",
       locale: SEO_CONFIG.locale,
@@ -232,7 +231,6 @@ export function generateOrganizationJsonLd({
       "@type": "ContactPoint",
       contactType: "customer service",
       email,
-      availableLanguage: ["Spanish", "English"],
     },
   };
 }
@@ -301,13 +299,13 @@ export function generateArticleJsonLd(
     headline: title,
     description,
     url,
-    image: image || `${SEO_CONFIG.siteUrl}${SEO_CONFIG.defaultImage}`,
+    image: absoluteUrl(image || SEO_CONFIG.defaultImage),
     datePublished,
-    dateModified: dateModified || datePublished,
+    ...(dateModified ? { dateModified } : {}),
     author: {
       "@type": "Person",
       name: authorName,
-      url: authorUrl || SEO_CONFIG.siteUrl,
+      ...(authorUrl ? { url: absoluteUrl(authorUrl) } : {}),
     },
     publisher: {
       "@type": "Organization",
@@ -456,7 +454,7 @@ export function generateProductJsonLd({
     "@type": "Product",
     name,
     description,
-    image: image || `${SEO_CONFIG.siteUrl}${SEO_CONFIG.defaultImage}`,
+    image: absoluteUrl(image || SEO_CONFIG.defaultImage),
     brand: {
       "@type": "Brand",
       name: brand,
@@ -465,7 +463,7 @@ export function generateProductJsonLd({
       "@type": "Offer",
       price: offer.price,
       priceCurrency: offer.priceCurrency,
-      availability: offer.availability || "https://schema.org/InStock",
+      ...(offer.availability ? { availability: offer.availability } : {}),
     })),
   };
 }
@@ -478,12 +476,15 @@ export function generateProductJsonLd({
  * Creates an absolute URL from a relative path.
  */
 export function absoluteUrl(path: string): string {
-  if (path.startsWith("http")) return path;
-  return `${SEO_CONFIG.siteUrl}${path.startsWith("/") ? path : `/${path}`}`;
+  const resolved = new URL(path, new URL("/", SEO_CONFIG.siteUrl));
+  if (!["https:", "http:"].includes(resolved.protocol) || resolved.username || resolved.password) {
+    throw new Error("SEO URLs must use HTTP(S) without embedded credentials.");
+  }
+  return resolved.href;
 }
 
 /**
- * Truncates text for meta descriptions (default max 155 chars).
+ * Optional editorial truncation, not a search-engine length requirement.
  */
 export function truncateDescription(text: string, maxLength = 155): string {
   if (text.length <= maxLength) return text;
@@ -503,11 +504,14 @@ export function generateSlug(title: string): string {
 }
 
 /**
- * Generates a canonical URL for a page (strips query and hash).
+ * Generates a canonical URL. Preserve meaningful query parameters by default;
+ * remove only explicitly named tracking parameters. Fragments are removed.
  */
-export function getCanonicalUrl(path: string): string {
-  const cleanPath = path.split("?")[0].split("#")[0];
-  return absoluteUrl(cleanPath);
+export function getCanonicalUrl(path: string, removeParams: string[] = []): string {
+  const canonical = new URL(absoluteUrl(path));
+  canonical.hash = "";
+  for (const parameter of removeParams) canonical.searchParams.delete(parameter);
+  return canonical.href;
 }
 
 // =============================================================================
@@ -522,7 +526,7 @@ export function getCanonicalUrl(path: string): string {
 export function JsonLd({ data }: { data: Record<string, unknown> }) {
   return createElement("script", {
     type: "application/ld+json",
-    dangerouslySetInnerHTML: { __html: JSON.stringify(data) },
+    dangerouslySetInnerHTML: { __html: JSON.stringify(data).replace(/</g, "\\u003c") },
   });
 }
 

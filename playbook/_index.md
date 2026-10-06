@@ -1,6 +1,6 @@
 # Foundvia Discovery — playbook index
 
-Start with [Your first 100 visits](first-100-visits.md) and the [standalone discovery skill](../skills/foundvia-discovery/SKILL.md).
+Start with [Your first 100 visits](first-100-visits.md) as the main beginner path. [Español](first-100-visits.es.md), [local before/after lab](../examples/discovery-lab/README.md), and [copyable worksheet](../templates/launch-worksheet.md) accompany it. The [standalone discovery skill](../skills/foundvia-discovery/SKILL.md) is optional.
 
 ## Corrected guidance
 

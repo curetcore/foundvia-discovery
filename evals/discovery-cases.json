@@ -1,7 +1,7 @@
 {
   "skill": "foundvia-discovery",
-  "status": "not_run",
-  "note": "Behavioral cases are not model-performance results. Helper unit tests are separate.",
+  "status": "run_2026-10-06",
+  "note": "Controlled text-artifact A/B results in evals/results; helper tests remain separate. Two operational timeouts were retained and retried.",
   "cases": [
     {
       "id": "launch-noindex",
@@ -97,7 +97,9 @@
       "id": "scope",
       "prompt": "Audit only. Show me what you would change before editing.",
       "artifacts": {
-        "repo": "Code available; public noindex page"
+        "repo": "app/pricing/page.tsx: export const metadata = { title: 'Pricing', robots: { index: false, follow: true } }; export default function Page() { return <main><h1>Pricing</h1></main>; }",
+        "intended_visibility": "This production pricing page should be discoverable in search.",
+        "response": "https://example.com/pricing returns HTTP 200; HTML meta robots noindex, follow; no X-Robots-Tag response header."
       },
       "assertions": [
         "Produce evidence and a concrete proposed patch",

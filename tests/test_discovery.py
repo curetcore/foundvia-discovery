@@ -52,8 +52,24 @@ class RobotsTests(unittest.TestCase):
         rules = "User-agent: Googlebot\nDisallow:\nUser-agent: GPTBot\nDisallow: /"
         self.assertTrue(self.decide(rules))
 
+    def test_version_and_wildcard_agent_decorations_match_product_token(self):
+        for agent in ("Googlebot/1.2", "Googlebot*"):
+            self.assertFalse(self.decide("User-agent: " + agent + "\nDisallow: /"))
+
+    def test_empty_agent_is_not_a_wildcard(self):
+        self.assertTrue(self.decide("User-agent:\nDisallow: /"))
+
 
 class MetadataTests(unittest.TestCase):
+    def test_unencoded_whitespace_and_control_characters_rejected(self):
+        for value in ("https://bad host/", "https://example.com/a b", "https://example.com/\n"):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                discovery.clean_url(value)
+    def test_unknown_directive_does_not_match_noindex_substring(self):
+        page = discovery.Page()
+        page.feed('<meta name="robots" content="not-noindex">')
+        self.assertFalse(discovery.noindex_evidence(page, [], "Googlebot"))
+
     def test_bot_targeted_noindex_is_not_generic(self):
         page = discovery.Page()
         page.feed('<META NAME="googlebot" content="noindex"><meta name="description" content="Useful">')
@@ -80,8 +96,14 @@ class MetadataTests(unittest.TestCase):
 
 
 class ResourceFailureTests(unittest.TestCase):
+    def test_protocol_errors_report_unknown_instead_of_crashing(self):
+        import http.client
+        with patch.object(discovery.urllib.request.OpenerDirector, "open", side_effect=http.client.BadStatusLine("invalid response")):
+            result = discovery.fetch("https://example.com/", 1)
+        self.assertIsNone(result["status"])
+        self.assertIn("invalid response", result["error"])
     def report(self, robots_status=404, sitemap_body="invalid XML"):
-        def fake_fetch(target, timeout):
+        def fake_fetch(target, timeout, same_origin_only=False):
             if target.endswith("robots.txt"):
                 return dict(url=target, status=robots_status, body="", error=None, truncated=False, content_type="text/plain")
             if target.endswith("sitemap.xml"):
@@ -119,6 +141,11 @@ class Fixture(BaseHTTPRequestHandler):
         if self.path == "/redirect":
             self.send_response(302)
             self.send_header("Location", "/public")
+            self.end_headers()
+            return
+        if self.path == "/credential-redirect":
+            self.send_response(302)
+            self.send_header("Location", "http://user:password@" + self.headers["Host"] + "/public")
             self.end_headers()
             return
         if self.path == "/robots.txt":
@@ -184,6 +211,60 @@ class IntegrationTests(unittest.TestCase):
         findings = self.findings("/large")
         self.assertEqual(findings["page-response"]["status"], "unknown")
         self.assertNotIn("canonical", findings)
+
+    def test_credential_redirect_is_not_followed(self):
+        report = discovery.audit(self.origin + "/credential-redirect", timeout=2)
+        self.assertEqual(report["findings"][0]["status"], "unknown")
+        self.assertIn("without credentials", report["resources"][0]["error"])
+
+    def test_findings_have_actionable_json_and_markdown_fields(self):
+        report = discovery.audit(self.origin + "/excluded", timeout=2)
+        finding = next(f for f in report["findings"] if f["check"] == "noindex:Googlebot")
+        self.assertEqual(finding["priority"], "P1")
+        self.assertEqual(finding["confidence"], "observed")
+        self.assertEqual(finding["location"], self.origin + "/excluded")
+        self.assertTrue(finding["verification"])
+        self.assertIn("Verify:", discovery.markdown(report))
+        self.assertEqual(json.loads(json.dumps(report)), report)
+
+    def test_openai_header_support_is_not_assumed(self):
+        findings = self.findings("/excluded")
+        self.assertEqual(findings["noindex:Googlebot"]["status"], "block")
+        self.assertEqual(findings["noindex:OAI-SearchBot"]["status"], "info")
+
+
+class ScopeTests(unittest.TestCase):
+    def fake_report(self, robots_body):
+        def fake_fetch(target, timeout, same_origin_only=False):
+            body = robots_body if target.endswith("robots.txt") else '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"/>' if target.endswith("sitemap.xml") else '<title>Product</title>'
+            return dict(url=target, status=200, body=body, error=None, truncated=False,
+                        content_type="text/plain" if target.endswith("robots.txt") else "text/html")
+        with patch.object(discovery, "fetch", side_effect=fake_fetch):
+            return {f["check"]: f for f in discovery.audit("https://example.com")["findings"]}
+
+    def test_malformed_sitemap_declaration_does_not_abort_audit(self):
+        findings = self.fake_report("User-agent: *\nAllow: /\nSitemap: https://[broken\nSitemap: https://other.example/sitemap.xml")
+        self.assertIn("Malformed", findings["sitemap-selection"]["evidence"])
+        self.assertIn("sitemap", findings)
+
+    def test_default_ports_are_same_origin(self):
+        self.assertTrue(discovery.same_origin("https://example.com", "https://EXAMPLE.com:443/map.xml"))
+        self.assertFalse(discovery.same_origin("https://example.com", "http://example.com/map.xml"))
+        self.assertFalse(discovery.same_origin("https://example.com", "https://example.com:0/map.xml"))
+
+    def test_google_rules_after_500_kib_are_not_applied(self):
+        rules = "User-agent: *\nAllow: /\n" + "#" * discovery.GOOGLE_ROBOTS_BYTES + "\nDisallow: /"
+        findings = self.fake_report(rules)
+        self.assertEqual(findings["robots:Googlebot"]["status"], "pass")
+        self.assertIn("500 KiB", findings["robots:Googlebot"]["evidence"])
+        self.assertEqual(findings["robots:OAI-SearchBot"]["status"], "unknown")
+
+    def test_cross_origin_sitemap_redirect_is_rejected_before_request(self):
+        handler = discovery.ScopedRedirect("https://example.com/map.xml")
+        request = discovery.urllib.request.Request("https://example.com/map.xml")
+        with self.assertRaisesRegex(ValueError, "outside"):
+            handler.redirect_request(request, None, 302, "Found", {}, "https://other.example/map.xml")
+        self.assertIsNotNone(handler.redirect_request(request, None, 302, "Found", {}, "https://example.com/new.xml"))
 
 
 if __name__ == "__main__":

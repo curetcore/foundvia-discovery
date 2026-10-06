@@ -5,7 +5,7 @@ description: Review Google and ChatGPT search eligibility, AI crawler rules, and
 
 # AI search eligibility
 
-Start with the user's actual site, relevant pages, and goal. Inspect responses before prescribing new files or bulk content. Follow the corrected [discovery guidance](../foundvia-discovery/references/discovery.md); historical snippets in this module must not override it.
+Start with the user's actual site, relevant pages, and goal. Inspect responses before prescribing new files or bulk content. Follow the corrected [discovery guidance](../foundvia-discovery/references/discovery.md). Provider-specific behavior must be checked against current primary sources.
 
 - Google: indexed, snippet-eligible pages and current Search Console settings matter. No top-20 prerequisite, ideal word count, AI schema requirement, or llms.txt ranking benefit is established here.
 - OpenAI: OAI-SearchBot handles search; GPTBot handles potential training. Preserve the user's independent training preference. ChatGPT-User is not the search-eligibility control.
