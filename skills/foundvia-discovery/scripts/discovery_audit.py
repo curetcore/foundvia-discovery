@@ -35,6 +35,30 @@ def same_origin(left, right):
     return origin(left) == origin(right)
 
 
+def equivalent_url(left, right):
+    """Normalize only origin spelling, default ports, and an empty root path.
+
+    Preserve non-root trailing slashes, query strings, and path case.
+    """
+    try:
+        def key(value):
+            parts = url.urlsplit(clean_url(value))
+            port = parts.port if parts.port is not None else (443 if parts.scheme == "https" else 80)
+            return parts.scheme, parts.hostname.lower(), port, parts.path, parts.query
+        return key(left) == key(right)
+    except ValueError:
+        return False
+
+
+def resource_problem(resource):
+    """Keep the original fetch failure visible in dependent checks."""
+    if resource["error"]:
+        return "Access failed: " + resource["error"]
+    if resource["truncated"]:
+        return "Response exceeded the 1 MiB inspection limit."
+    return "HTTP " + str(resource["status"]) + "; content type: " + str(resource.get("content_type"))
+
+
 class ScopedRedirect(urllib.request.HTTPRedirectHandler):
     def __init__(self, origin=None):
         self.origin = origin
@@ -237,7 +261,7 @@ def audit(target, timeout=10):
         record("h1", "pass" if page.h1 else "warn", str(page.h1) + " H1 elements in initial HTML.", "Check rendered headings for a clear main topic; multiple H1s are not an automatic ranking failure.")
         base = url.urljoin(final, page.base or "")
         canonicals = [url.urljoin(base, value) for value in page.canonicals if value]
-        record("canonical", "pass" if canonicals == [final] else "warn", ", ".join(canonicals) or "No canonical link in initial HTML.", "Review intended canonical; another URL can be intentional. HTTP Link headers are not checked.")
+        record("canonical", "pass" if len(canonicals) == 1 and equivalent_url(canonicals[0], final) else "warn", ", ".join(canonicals) or "No canonical link in initial HTML.", "Review intended canonical; another URL can be intentional. HTTP Link headers are not checked.")
         record("structured-data", "info", str(page.jsonld) + " JSON-LD script elements in initial HTML.", "Validate contents and rendered output. Presence alone does not prove valid or eligible schema.")
     origin = url.urlunsplit(url.urlsplit(final)._replace(path="", query="", fragment=""))
     robots = request(origin + "/robots.txt")
@@ -258,7 +282,7 @@ def audit(target, timeout=10):
                    "Training policy is independent of search; preserve the publisher's choice." if bot == "GPTBot" else "Review accidental restrictions and verify CDN bot access separately.")
         else:
             google_missing = bot == "Googlebot" and robots["status"] is not None and 400 <= robots["status"] < 500 and robots["status"] != 429
-            record("robots:" + bot, "info" if google_missing else "unknown", "robots.txt HTTP " + str(robots["status"]) + (" — Google treats this 4xx as no robots restrictions." if google_missing else " — rule access was not evaluated."), "Inspect robots content, errors, redirects, and CDN policy. Do not assume search visibility.")
+            record("robots:" + bot, "info" if google_missing else "unknown", "robots.txt: " + resource_problem(robots) + (" — Google treats this 4xx as no robots restrictions." if google_missing else " — rule access was not evaluated."), "Inspect robots content, errors, redirects, and CDN policy. Do not assume search visibility.")
     _, declared = robots_groups(robots["body"] if robots_ok else "")
     candidates = []
     skipped = []
@@ -277,7 +301,7 @@ def audit(target, timeout=10):
     sitemap = request(sitemap_url, same_origin_only=True)
     try:
         if sitemap["status"] != 200 or sitemap["truncated"]:
-            raise ValueError("HTTP " + str(sitemap["status"]) + "; truncated=" + str(sitemap["truncated"]))
+            raise ValueError(resource_problem(sitemap))
         root = ET.fromstring(sitemap["body"])
         kind = root.tag.split("}")[-1]
         if kind not in ("urlset", "sitemapindex"):
@@ -289,14 +313,27 @@ def audit(target, timeout=10):
             record("sitemap", "pass" if final in entries else "warn", str(len(entries)) + " URLs; audited URL " + ("present." if final in entries else "not found in this file."), "This samples one file. Include intended canonical URLs; missing membership is not an indexing prohibition.")
     except (ValueError, ET.ParseError) as exc:
         record("sitemap", "unknown", str(exc), "Inspect the intended XML sitemap. Missing or unparsed sitemap does not prove indexing failure.")
-    return dict(version="0.2.0", requested_url=target, final_url=final,
+    return dict(version="0.2.1", requested_url=target, final_url=final,
                 checked_at=dt.datetime.now(dt.timezone.utc).isoformat(), resources=resources, findings=findings,
                 limits=["Initial responses only; no JavaScript rendering or actual bot impersonation.", "One page, robots.txt, one same-origin sitemap; 1 MiB per response. Cross-origin sitemap redirects are not followed.", "Google robots rules use the first 500 KiB; large-file handling for other providers is not verified.", "OpenAI generic noindex meta is checked; its support for scoped meta and X-Robots-Tag is not assumed.", "No indexing, ranking, citation, conversion, or Core Web Vitals verification.", "Robots evaluator covers common rules; vendor-specific behavior and cached policies need separate verification."])
 
 
 def markdown(report):
     lines = ["# Discovery audit", "", "URL: " + report["final_url"], "Checked: " + report["checked_at"], ""]
+    inaccessible = [r for r in report["resources"] if r["error"]]
+    unknown = [f for f in report["findings"] if f["status"] == "unknown"]
+    if inaccessible:
+        lines += ["## Access problem — audit incomplete", "",
+                  "The auditor could not retrieve these resources. UNKNOWN means not checked, not that the site failed the SEO check.", ""]
+        lines += ["- " + r["url"] + " — " + resource_problem(r) for r in inaccessible]
+        lines += ["", "Next: check the URL and network access from this environment, then retry. If access remains blocked, inspect the resources with a browser or another available tool. Do not disable TLS verification.", ""]
+    if unknown:
+        lines += ["## Not checked (" + str(len(unknown)) + ")", ""]
+        lines += ["- " + f["check"] + " · " + f["location"] + " — " + f["evidence"] + " Next: " + f["action"] + " Verify: " + f["verification"] for f in unknown]
+        lines += [""]
     for finding in report["findings"]:
+        if finding["status"] == "unknown":
+            continue
         lines += ["## " + finding["status"].upper() + " · " + finding["check"], "", "Location: " + finding["location"],
                   "Priority: " + (finding["priority"] or "none") + " · Confidence: " + finding["confidence"], "",
                   finding["evidence"], "", "Next: " + finding["action"], "", "Verify: " + finding["verification"], ""]
