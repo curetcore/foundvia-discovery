@@ -1,6 +1,6 @@
 # Foundvia Discovery brand
 
-Status: O2 candidate, October 6, 2026. Visual approval pending. This defines the open-source toolkit; it does not change the Foundvia application.
+Status: O2 direction approved by the founder on October 6, 2026. This defines the open-source toolkit; it does not change the Foundvia application.
 
 ## Identity
 
@@ -47,4 +47,4 @@ Avoid miniature terminal windows in the cover, provider-logo walls, invented met
 
 ## Review and acceptance
 
-Inspect logo provenance, desktop composition, 320/390 px readability, light/dark surrounding surfaces, and the adjacent Markdown promise. The O2 cover is a candidate. O5 validates the complete README rendered by GitHub. Founder approval is still required before calling this direction accepted.
+Inspect logo provenance, desktop composition, 320/390 px readability, light/dark surrounding surfaces, and the adjacent Markdown promise. The founder approved this O2 visual direction on October 6, 2026 ("aprobado"). O5 validates the complete README rendered by GitHub; this approval does not claim that the final README is implemented or published.

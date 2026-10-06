@@ -1,5 +1,5 @@
 {
-  "status": "candidate: founder visual approval pending",
+  "status": "O2 visual direction approved by founder on 2026-10-06",
   "verified_on": "2026-10-06",
   "live_url": "https://foundvia.dev/",
   "live_logo_url": "https://foundvia.dev/foundvia/logo.svg",
@@ -25,5 +25,6 @@
     }
   ],
   "live_logo_sha256": "e0fcec3a5ecf7eecf9392aac4e21b2a80773470f5fb778bdd92673a522bd22d1",
-  "historical_inventory_drift": "brand/v1 inventory dark-logo hash differs from current public alias; current local alias matches live bytes"
+  "historical_inventory_drift": "brand/v1 inventory dark-logo hash differs from current public alias; current local alias matches live bytes",
+  "approval": "User message: aprobado"
 }

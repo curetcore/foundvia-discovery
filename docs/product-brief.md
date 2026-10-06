@@ -1,6 +1,6 @@
 # Product brief
 
-O2 candidate · October 6, 2026.
+O2 direction approved · October 6, 2026.
 
 ## The person and the first useful result
 

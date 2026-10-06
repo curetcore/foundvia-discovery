@@ -1,6 +1,6 @@
 # README editorial outline
 
-O2 structure candidate. Final claims and examples depend on O3/O4; visual production is O5.
+O2 structure approved on October 6, 2026. Final claims and examples depend on O3/O4; visual production is O5.
 
 1. **Foundvia Discovery** — authentic logo and short cover. Markdown sentence states the toolkit's concrete capability. Three relevant badges maximum: license, tested CI and runtime. Do not add compatibility badges for untested agents.
 2. **Run your first audit** — one copyable command sequence, Python requirement, no account/API key, inspection boundaries nearby. Existing helper path stays correct until any intentional packaging change.
