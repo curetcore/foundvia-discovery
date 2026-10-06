@@ -27,7 +27,7 @@ python3 <path-to-this-skill>/scripts/discovery_audit.py https://example.com
 python3 <path-to-this-skill>/scripts/discovery_audit.py https://example.com --format json
 ```
 
-The helper fetches one page, its origin's robots.txt, and one same-origin sitemap. It uses its own identified user agent: robots decisions are calculated from rules, not proof that Google/OpenAI can bypass the site's CDN. It checks initial HTML only. Read [discovery.md](references/discovery.md) for interpretation and current primary sources.
+The helper fetches one page, its origin's robots.txt, and one same-origin sitemap by default. If the sitemap is an index and page membership matters, rerun with `--sitemap-children 3` to inspect a bounded same-origin sample (maximum 5, one level only). Report `sitemap_coverage.partial` and distinguish absence from a sample from absence in all eligible children; never treat listing as indexing evidence. It uses its own identified user agent: robots decisions are calculated from rules, not proof that Google/OpenAI can bypass the site's CDN. It checks initial HTML only. Read [discovery.md](references/discovery.md) for interpretation and current primary sources.
 
 If a report contains UNKNOWN findings, explain the underlying resource errors first: UNKNOWN means the check could not be completed, not that the site failed. Do not return a wall of unknown labels as a finished diagnosis. Group unavailable checks, identify the next accessible evidence source (browser, fetch tool, or authorized local files), and never invent results or disable TLS verification to make a request pass.
 

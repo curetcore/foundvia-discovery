@@ -9,6 +9,7 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 ## [Unreleased]
 
 ### Added
+- Opt-in bounded child-sitemap inspection (`--sitemap-children 0–5`) with observed membership and explicit partial/error coverage; 10 regression tests.
 - Recorded live Codex tool-use smoke checks on two public projects and an inaccessible control, with requests, responses, helper output, and catalog-warning disclosure.
 - Report coverage summary, skipped HTML checks, and optional `--require-complete` exit status for automation.
 - Beginner troubleshooting, clearer status tables, reproducible issue form, and pull request template.

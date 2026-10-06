@@ -39,6 +39,16 @@ The auditor reads the initial page response, robots rules and one sitemap. It do
 
 Each report begins with a coverage summary. If initial HTML is unavailable, it lists the metadata checks that were skipped. For automation, add `--fail-on-block --require-complete` to reject both observed blocks and incomplete reports. [Troubleshooting →](docs/troubleshooting.md)
 
+### Your sitemap is an index?
+
+Check up to three child files to see whether the audited URL is listed:
+
+```bash
+python3 discovery.py audit https://example.com --sitemap-children 3
+```
+
+The report names matching files and discloses partial coverage or failed children. Being listed does not prove indexing. [How child inspection works →](docs/auditor.md#check-a-sitemap-indexs-children)
+
 ## See a blocker become a verified change
 
 Try the controlled local example:
