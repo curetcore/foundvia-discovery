@@ -23,7 +23,7 @@ The prior access-diagnostics correction is preserved: errors are explained first
 | Live initial-response smoke checks | foundvia.dev and karrito.app; raw reports remain in the task outputs |
 | CI | Python 3.10 and 3.14; Node 22.18.0. Consult the linked PR for actual run status |
 
-Local Python used 3.14.7. These are deterministic code checks plus small live samples, not a full Next.js build or an agent live-task benchmark. Installation does not prove automatic skill selection; no fresh agent compatibility benchmark was run.
+Local Python used 3.14.7. These are deterministic code checks plus small live samples, not a full Next.js build or an agent live-task benchmark. Installation alone does not prove automatic skill selection. The subsequent [live Codex smoke checks](live-agent-validation.md) record actual tool use and one relevant-request selection, with explicit limits.
 
 ## Remaining limits
 
