@@ -1,6 +1,13 @@
 # Run a discovery audit
 
-Python 3.10+; standard library only. From the repository root:
+Python 3.10+; standard library only. From the repository root, the short entry point forwards all audit arguments and exit codes:
+
+```bash
+python3 discovery.py audit https://example.com
+python3 discovery.py practice
+```
+
+The original standalone helper remains available:
 
 ```bash
 python3 skills/foundvia-discovery/scripts/discovery_audit.py https://example.com

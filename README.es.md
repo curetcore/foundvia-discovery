@@ -15,18 +15,14 @@ Un toolkit open source de [Foundvia](https://foundvia.dev), creado por [Ronaldo 
 
 ## Ejecuta tu primera auditoría
 
-Con Git y Python instalados, abre tu terminal:
-
-```bash
-git clone https://github.com/ronaldships/foundvia-discovery.git
-cd foundvia-discovery
-```
+Clona o descarga este repositorio con el botón **Code** de GitHub. Abre la carpeta descargada en tu terminal. Necesitas Python instalado; comprueba su versión con `python3 --version`.
 
 Revisa **una página que quieras hacer pública**. Cambia la URL por la tuya:
 
 ```bash
-python3 skills/foundvia-discovery/scripts/discovery_audit.py \
-  https://tu-sitio.com > audit.md
+python3 discovery.py audit \
+  https://tu-sitio.com \
+  > audit.md
 ```
 
 Abre `audit.md` en tu editor. Cada hallazgo incluye **evidencia, siguiente acción y cómo verificarla**. No necesitas cuenta ni API key.
@@ -38,7 +34,8 @@ El auditor lee la respuesta inicial, las reglas de robots y un sitemap. No ejecu
 Prueba el ejercicio local:
 
 ```bash
-python3 examples/discovery-lab/run.py
+python3 discovery.py \
+  practice
 ```
 
 Abre `outputs-local/discovery-lab/before.md` y después `after.md`. El servidor temporal funciona en tu computadora y se cierra al terminar.
@@ -47,9 +44,9 @@ Abre `outputs-local/discovery-lab/before.md` y después `after.md`. El servidor 
 
 <img src="assets/report-example.png" alt="Extracto real del ejercicio local: bloqueo noindex para Googlebot; evidencia meta robots: noindex. Confirmar si la exclusión es intencional y quitarla solo en páginas públicas para búsqueda." width="640">
 
-| Antes | Un cambio | Después |
-|---|---|---|
-| Bloqueos noindex para Googlebot y OAI-SearchBot | Quitar solo la etiqueta accidental | Sin bloqueos observados en la página corregida ni al volver a auditarla |
+1. **Antes:** bloqueos noindex para Googlebot y OAI-SearchBot.
+2. **Cambio:** quitar solo la etiqueta accidental.
+3. **Después:** sin bloqueos observados en la página corregida ni al volver a auditarla.
 
 GPTBot sigue bloqueado: entrenamiento y acceso para búsquedas son decisiones distintas. El ejercicio demuestra la corrección técnica; no demuestra crecimiento orgánico. [Cómo reproducirlo →](examples/discovery-lab/README.md)
 
@@ -63,8 +60,12 @@ GPTBot sigue bloqueado: entrenamiento y acceso para búsquedas son decisiones di
 Instala **solo el skill principal** con [Skills CLI](https://github.com/vercel-labs/skills):
 
 ```bash
-npx skills add ronaldships/foundvia-discovery \
-  --skill foundvia-discovery
+org=ronaldships
+repo=foundvia-discovery
+npx skills add \
+  "$org/$repo" \
+  --skill \
+  foundvia-discovery
 ```
 
 Después pídele:
@@ -90,12 +91,10 @@ La meta es **100 sesiones medidas desde Google orgánico y referencias observada
 
 ## Entiende qué demuestra cada herramienta
 
-| Componente | Qué permite comprobar | Qué necesita más evidencia |
-|---|---|---|
-| Auditor Python | HTTP/HTML inicial, reglas comunes de robots y un sitemap del mismo origen | JavaScript, acceso del crawler real y cobertura de todo el sitio |
-| Trabajo con asistente | Propuestas o cambios acotados con tus herramientas y evidencia | Desplegar y verificar en vivo son pasos separados |
-| Search Console | Inspección y rendimiento reportados por Google | La prueba en vivo no garantiza indexación ni aparición |
-| Analytics | Sesiones y resultados según tus reglas documentadas | Referencias ausentes, UTMs copiados y datos faltantes limitan la atribución |
+- **Auditor Python:** HTTP/HTML inicial, reglas comunes de robots y un sitemap del mismo origen. JavaScript, acceso del crawler real y cobertura de todo el sitio necesitan otras comprobaciones.
+- **Trabajo con asistente:** propuestas o cambios acotados con tus herramientas y evidencia. Desplegar y verificar en vivo son pasos separados.
+- **Search Console:** inspección y rendimiento reportados por Google. La prueba en vivo no garantiza indexación ni aparición.
+- **Analytics:** sesiones y resultados según tus reglas documentadas. Referencias ausentes, UTMs copiados y datos faltantes limitan la atribución.
 
 **Comprobado localmente:** 32 pruebas Python, ejercicio en copia limpia y ejemplo antes/después con tres etapas. El auditor declara Python 3.10+; estas pruebas locales usaron Python 3.14.7. [Validación O3](docs/quality-results.md) · [Validación O4](docs/first-visits-validation.md)
 
@@ -114,7 +113,8 @@ Si un hallazgo está mal, comparte un caso público mínimo, el comando y el res
 Ejecuta las pruebas Python:
 
 ```bash
-python3 -m unittest discover -s tests -v
+python3 -m unittest \
+  discover -s tests -v
 ```
 
 Lee [CONTRIBUTING](CONTRIBUTING.md) para aportar. Si te ayudó a encontrar un problema real, una estrella ayuda a que otros builders lo descubran. Los aportes reproducibles lo hacen más útil.
