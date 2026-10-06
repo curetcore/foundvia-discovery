@@ -8,6 +8,8 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Unreleased]
 
+## [3.0.0] — 2026-10-06
+
 ### Added
 - Foundvia Discovery branding, English landing page, Spanish introduction, visual discovery path, and first-100-visits guide.
 - Self-contained `foundvia-discovery` skill with standard-library Python audit helper, scoped findings, JSON output, and controlled HTTP tests.

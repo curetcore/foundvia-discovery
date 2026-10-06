@@ -6,7 +6,7 @@ Goal: help founders use the toolkit, report real problems, and contribute fixes.
 
 | Channel | Route | Status |
 |---|---|---|
-| GitHub | Public repo, description/topics, contribution guide, useful demos | Release work in progress |
+| GitHub | Public repo, description/topics, contribution guide, useful demos | Public repository renamed; v3 toolkit prepared |
 | skills.sh | Real installs via the [Skills CLI](https://skills.sh/docs/faq); no manual submission form | Install command prepared; listing not yet verified |
 | SkillsMP | Public SKILL.md repository indexing; see [FAQ](https://skillsmp.com/docs/faq) | Indexing not verified |
 | SkillHub | Publish flow at [app/skills](https://www.skillhub.club/app/skills) | Submission pending; account access may be needed |
