@@ -1,0 +1,105 @@
+{
+  "status": "O5 candidate awaiting founder visual approval",
+  "logo_source": "assets/brand/manifest.json",
+  "font_version": "Geist 1.401",
+  "font_license": "assets/fonts/OFL.txt",
+  "report_source": "examples/discovery-lab/sample-results/before.json",
+  "files": {
+    "assets/README.md": {
+      "sha256": "54c117742504d71c09519b2653c82ac3a7b4e90d2ee848ae54218050ebb2e80a",
+      "bytes": 3451
+    },
+    "assets/brand/cover-candidate.svg": {
+      "sha256": "f0613c208fac1ee21a105ace40020609ab9c744f3e11e683127e09f4596b541b",
+      "bytes": 40071
+    },
+    "assets/brand/logo-on-dark.svg": {
+      "sha256": "400850e668bc5619a2b7a481a61ccc1f1194309055bd7c0fee6c6a0a895f4484",
+      "bytes": 38877
+    },
+    "assets/brand/logo-on-light.svg": {
+      "sha256": "7a810e530cfd31f2534288b8a0b9a791831552f40b777b14a9a6f2ae39363f57",
+      "bytes": 38877
+    },
+    "assets/brand/manifest.json": {
+      "sha256": "0f00b0fd066cc34c32ee1e4ff6ad088bbdaf466dff0bab231bef8580c937b65d",
+      "bytes": 1618
+    },
+    "assets/discovery-cover-dark.png": {
+      "sha256": "6f823bad533cba9d5d27e3f7d266688f781f9195c26279e0696216af33768398",
+      "bytes": 70454
+    },
+    "assets/discovery-cover-dark.svg": {
+      "sha256": "70e2c55bdb78898ff4fc54ef69a686a44c2b04c8e0f5eda1c33e19f40c815f12",
+      "bytes": 68568
+    },
+    "assets/discovery-cover-light.png": {
+      "sha256": "5f3949dcacd5e091069641627b44d84efe53c8a3a8f702f551e8d314e27c6d2b",
+      "bytes": 69712
+    },
+    "assets/discovery-cover-light.svg": {
+      "sha256": "bfe9addb86cfb19601ae29712eaa3d0564e79a1b9206fb5b58de133f1c911837",
+      "bytes": 68568
+    },
+    "assets/discovery-path-dark.png": {
+      "sha256": "b6d2db003c979ed87e5306c4280267d732508f43d00d1ed18027669fa5b8dbde",
+      "bytes": 51612
+    },
+    "assets/discovery-path-dark.svg": {
+      "sha256": "2498a15247f6afe4d2a30a2a6ef5e78b38144c87bea5b0075bb8b09da1491bc4",
+      "bytes": 108239
+    },
+    "assets/discovery-path-light.png": {
+      "sha256": "7b167e87254e4955ecb9dd1f4616e055fd8cd5f4a85ee5fa93987ef8897f2806",
+      "bytes": 50579
+    },
+    "assets/discovery-path-light.svg": {
+      "sha256": "71f293835b1b707ee1745a30ae9c77b7540c9ee94bb2da481e72ccea858b03ee",
+      "bytes": 108239
+    },
+    "assets/fonts/OFL.txt": {
+      "sha256": "c683bfbcc7e087f5d37a54ef628f10387c451a83ddc459b151403a164ac46c90",
+      "bytes": 4383
+    },
+    "assets/fonts/geist-latin.woff2": {
+      "sha256": "1b5ebfb3a01a97343ac96873e6d59a8cb285c66012b6a1ac509cb2765e995ba8",
+      "bytes": 28356
+    },
+    "assets/report-example.html": {
+      "sha256": "3223d1e49bd624410a9dea71b391e33e19e2f1f88309bdbb4e66e521d4dfc821",
+      "bytes": 1280
+    },
+    "assets/report-example.png": {
+      "sha256": "af4f858808daa53fc13129461b61be2c4b895b86aac936f193e253f8120de44f",
+      "bytes": 170785
+    },
+    "assets/social-preview.png": {
+      "sha256": "a76d257c4f6075119ca3570a65ea23bd4dc59731aa4ad33c18eb2eab693d3399",
+      "bytes": 64774
+    },
+    "assets/social-preview.svg": {
+      "sha256": "29530807fc319ba8211cc697889de90cafe6d161c2afffee7f91358f620b647c",
+      "bytes": 89617
+    },
+    "assets/sources/discovery-cover-dark.svg": {
+      "sha256": "4053d5cbc224649b170a591c8533025234e3c51d31c94b2608cc64c00bd0c36f",
+      "bytes": 39725
+    },
+    "assets/sources/discovery-cover-light.svg": {
+      "sha256": "6b55e2643a8a3eafac29d21ec139ac9af4c0ee01780d3dfbd09ef076c83354ca",
+      "bytes": 39725
+    },
+    "assets/sources/discovery-path-dark.svg": {
+      "sha256": "ee0c82cb1276b091bebc471130d89e19a4ae3c5498ee0f7d67b14f8c0d3072b1",
+      "bytes": 1631
+    },
+    "assets/sources/discovery-path-light.svg": {
+      "sha256": "61c758e02a93a8c2b1d6c7c4054775add514c4b11ac8d7d7efc45c8c3b9b69bb",
+      "bytes": 1631
+    },
+    "assets/sources/social-preview.svg": {
+      "sha256": "c203d5640c51f77cdff0c4766b6636270d8218b221af072db03528f57f9bcecc",
+      "bytes": 39743
+    }
+  }
+}
