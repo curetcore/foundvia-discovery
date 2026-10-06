@@ -12,7 +12,7 @@ import urllib.request
 import xml.etree.ElementTree as ET
 
 MAX_BYTES = 1024 * 1024
-USER_AGENT = "FoundviaDiscovery/0.1 (+https://github.com/curetcore/foundvia-discovery)"
+USER_AGENT = "FoundviaDiscovery/0.1 (+https://github.com/ronaldships/foundvia-discovery)"
 BOTS = ("Googlebot", "OAI-SearchBot", "GPTBot")
 
 

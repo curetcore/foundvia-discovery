@@ -19,7 +19,7 @@ Find what blocks your SaaS on Google and ChatGPT. Fix it. Measure what happens.
 You shipped a useful product. Now you need to know whether people—and search crawlers—can find it.
 
 ```bash
-git clone https://github.com/curetcore/foundvia-discovery.git
+git clone https://github.com/ronaldships/foundvia-discovery.git
 cd foundvia-discovery
 python3 skills/foundvia-discovery/scripts/discovery_audit.py https://your-site.com
 ```
@@ -50,7 +50,7 @@ Next: Training policy is independent of search; preserve the publisher's choice.
 Install just the flagship skill with the [Skills CLI](https://github.com/vercel-labs/skills):
 
 ```bash
-npx skills add curetcore/foundvia-discovery --skill foundvia-discovery
+npx skills add ronaldships/foundvia-discovery --skill foundvia-discovery
 ```
 
 Or copy the self-contained `skills/foundvia-discovery` folder into your agent's skill directory. See [installation](docs/install.md).

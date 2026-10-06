@@ -3,13 +3,13 @@
 ## Skills CLI
 
 ```bash
-npx skills add curetcore/foundvia-discovery --skill foundvia-discovery
+npx skills add ronaldships/foundvia-discovery --skill foundvia-discovery
 ```
 
 The [Vercel Labs CLI](https://github.com/vercel-labs/skills) lets you select the target agent and installation scope. Review those choices rather than silently enabling every module. Listing available skills does not require installing them:
 
 ```bash
-npx skills add curetcore/foundvia-discovery --list
+npx skills add ronaldships/foundvia-discovery --list
 ```
 
 ## Manual install
