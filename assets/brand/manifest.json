@@ -1,0 +1,25 @@
+{
+  "status": "candidate: founder visual approval pending",
+  "verified_on": "2026-10-06",
+  "live_url": "https://foundvia.dev/",
+  "live_logo_url": "https://foundvia.dev/foundvia/logo.svg",
+  "live_font_family": "Geist, \"Geist Fallback\"",
+  "wordmark_status": "existing provisional outlines retained",
+  "permission_basis": "Founder requested Foundvia branding for the open-source Foundvia project; identifying use only, no trademark grant implied",
+  "assets": [
+    {
+      "file": "logo-on-dark.svg",
+      "sha256": "e0fcec3a5ecf7eecf9392aac4e21b2a80773470f5fb778bdd92673a522bd22d1",
+      "origin": "Foundvia public/foundvia/logo.svg (matches live bytes)",
+      "bytes": 38878
+    },
+    {
+      "file": "logo-on-light.svg",
+      "sha256": "453f7e0e8996884330b4c68280f38af09a9f522d32779c83e699364d0193ff2c",
+      "origin": "Theme variant of current logo; only wordmark fills changed to #18181b and #52525b; embedded flame unchanged",
+      "bytes": 38878
+    }
+  ],
+  "live_logo_sha256": "e0fcec3a5ecf7eecf9392aac4e21b2a80773470f5fb778bdd92673a522bd22d1",
+  "historical_inventory_drift": "brand/v1 inventory dark-logo hash differs from current public alias; current local alias matches live bytes"
+}
