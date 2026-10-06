@@ -1,4 +1,10 @@
 {
+  "name": "foundvia-discovery-checks",
   "private": true,
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "test": "node tests/test_dates.mjs && node --test tests/test_seo.mjs"
+  },
+  "engines": { "node": ">=22.18.0" },
+  "devDependencies": { "react": "19.2.0" }
 }

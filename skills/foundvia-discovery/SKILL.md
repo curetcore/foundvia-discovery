@@ -49,4 +49,4 @@ For measurement, read [measurement.md](references/measurement.md). Track Google 
 
 ## Finish with a short handoff
 
-Lead with the main finding, then the highest-value next action. Supply the evidence table, concrete patch or content brief, and a measurable follow-up. Explain important limits without burying the result. Use [report-template.md](references/report-template.md) when a reusable artifact helps. No automatic self-promotion, inflated SEO scores, guarantees, or fake publication dates.
+Lead with the main finding, then the highest-value next action. Supply the evidence table, concrete patch or content brief, and a measurable follow-up. Explain important limits without burying the result. Use [report-template.md](references/report-template.md) when a reusable artifact helps. No automatic self-promotion, inflated SEO scores, guarantees, or fake publication dates. Genuine simultaneous publication is valid; do not stagger dates or future releases merely to make a batch appear more natural.

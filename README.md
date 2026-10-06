@@ -93,21 +93,21 @@ We do not promise citations, traffic, or timelines. Search access does not imply
 
 ## Advanced modules
 
-The original modules remain available for focused work. Several are still Spanish and contain historical examples; their quality-review status is explicit below. Start with the flagship, and verify provider-specific advice before applying older snippets.
+Focused modules retain their names and paths. Their English instructions and references have been reviewed; start with the flagship and consult the [module decisions](docs/module-review.md) for scope and testing limits.
 
 | Module | Purpose | Review status |
 |---|---|---|
-| [foundvia-discovery](skills/foundvia-discovery/) | Public discovery audit → fixes → launch experiment → measurement | New; helper tested, model evaluations pending |
-| [seo-ai-geo](skills/seo-ai-geo/) | Search eligibility and independent crawler policies | Core guidance corrected; historical references marked |
+| [foundvia-discovery](skills/foundvia-discovery/) | Public discovery audit → fixes → launch experiment → measurement | Helper tested; 48 constrained A/B responses reviewed |
+| [seo-ai-geo](skills/seo-ai-geo/) | Search eligibility and independent crawler policies | Instructions and references reviewed |
 | [seo-slug-dates](skills/seo-slug-dates/) | Truthful content dates and migration away from generated history | Replaced fabricated-date guidance |
-| [seo-technical](skills/seo-technical/) | Technical SEO and performance | Legacy; full review pending |
-| [seo-on-page](skills/seo-on-page/) | Metadata, headings, links | Legacy; full review pending |
-| [seo-content-strategy](skills/seo-content-strategy/) | Customer problems and content | Legacy; full review pending |
-| [seo-local](skills/seo-local/) | Location-based businesses | Legacy; full review pending |
-| [seo-analytics](skills/seo-analytics/) | Search Console and traffic measurement | Legacy; full review pending |
-| [seo-growth-engine](skills/seo-growth-engine/) | Content and distribution at scale | Legacy; full review pending |
-| [seo-nextjs-implementation](skills/seo-nextjs-implementation/) | TypeScript metadata and schema helpers | Legacy; full review pending |
-| [seo-audit-website](skills/seo-audit-website/) | Optional squirrelscan integration | Third-party; not required by flagship |
+| [seo-technical](skills/seo-technical/) | Technical SEO and performance | Instructions and references reviewed |
+| [seo-on-page](skills/seo-on-page/) | Metadata, headings, links | Instructions and references reviewed |
+| [seo-content-strategy](skills/seo-content-strategy/) | Customer problems and content | Instructions and references reviewed |
+| [seo-local](skills/seo-local/) | Location-based businesses | Instructions and references reviewed |
+| [seo-analytics](skills/seo-analytics/) | Search Console and traffic measurement | Instructions and references reviewed |
+| [seo-growth-engine](skills/seo-growth-engine/) | Small content and distribution experiments | Instructions and references reviewed |
+| [seo-nextjs-implementation](skills/seo-nextjs-implementation/) | TypeScript metadata and schema helpers | Instructions and references reviewed |
+| [seo-audit-website](skills/seo-audit-website/) | Optional third-party audit review | Old scanner workflow withdrawn; optional adapter |
 
 Historical examples in [examples/](examples/) are snapshots, not proof of current production behavior or causal results.
 

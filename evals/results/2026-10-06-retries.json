@@ -1,7 +1,25 @@
 {
-  "skill": "foundvia-discovery",
-  "status": "run_2026-10-06",
-  "note": "Controlled text-artifact A/B results in evals/results; helper tests remain separate. Two operational timeouts were retained and retried.",
+  "started_at": "2026-10-06T17:53:49.267912+00:00",
+  "cli": "codex-cli 0.157.0",
+  "model": "gpt-6-astra",
+  "repetitions": 3,
+  "conditions": [
+    "baseline",
+    "skill"
+  ],
+  "workers": 2,
+  "timeout_seconds": 120,
+  "disabled_skill_paths": 133,
+  "skills_context_tokens": 1,
+  "disabled_skills_file_sha256": "b432fdcd7811bc1367eefd98511b2ba2b7b1377288a12938a37f62ec960529b2",
+  "task_mode": "supplied text artifacts only; no browsing or tool execution",
+  "limitations": "Tests written reasoning, not live crawling, tool execution, deployment, or trigger selection. Same-author rubric review is not independent judging.",
+  "skill_files": {
+    "skills/foundvia-discovery/SKILL.md": "2c90627ec06c01c54f8afdf77148d46afbdcbbc632f116e1b6a924dc9f6d5663",
+    "skills/foundvia-discovery/references/discovery.md": "f02f7bfdf82642b2a342f4763166c69cef5979400a32cec0e3005b4836620a60",
+    "skills/foundvia-discovery/references/measurement.md": "e44997354ca139f9cb9ab6749f491fd46b4c14f5a19d54f6d36cc223323f7465",
+    "skills/foundvia-discovery/references/report-template.md": "de4f2c68f9e36f8777c1ef5cb6d58b6e0a028d8672a6950751f4f697698af868"
+  },
   "cases": [
     {
       "id": "launch-noindex",
@@ -119,5 +137,10 @@
         "Explain truthful-date migration"
       ]
     }
-  ]
+  ],
+  "selected_run_ids": [
+    "launch-noindex-baseline-1",
+    "launch-noindex-skill-1"
+  ],
+  "finished_at": "2026-10-06T17:54:12.492439+00:00"
 }
