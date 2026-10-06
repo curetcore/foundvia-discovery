@@ -61,6 +61,28 @@ class RobotsTests(unittest.TestCase):
 
 
 class MetadataTests(unittest.TestCase):
+    def test_canonical_equivalence_is_conservative(self):
+        for left, right in (("https://example.com", "https://example.com/"),
+                            ("https://EXAMPLE.com:443/", "https://example.com/")):
+            self.assertTrue(discovery.equivalent_url(left, right))
+        for left, right in (("https://example.com/page", "https://example.com/page/"),
+                            ("https://example.com/Page", "https://example.com/page"),
+                            ("https://example.com/?a=1", "https://example.com/"),
+                            ("http://example.com/", "https://example.com/"),
+                            ("https://other.example/", "https://example.com/")):
+            self.assertFalse(discovery.equivalent_url(left, right))
+
+    def test_root_canonical_without_slash_passes_in_audit(self):
+        def response(target, timeout, same_origin_only=False):
+            body = '<link rel="canonical" href="https://example.com">'
+            return dict(url=target, status=200, body=body, error=None, truncated=False,
+                        content_type="text/html")
+        with patch.object(discovery, "fetch", side_effect=response):
+            report = discovery.audit("https://example.com/")
+        canonical = next(f for f in report["findings"] if f["check"] == "canonical")
+        self.assertEqual(canonical["status"], "pass")
+
+
     def test_unencoded_whitespace_and_control_characters_rejected(self):
         for value in ("https://bad host/", "https://example.com/a b", "https://example.com/\n"):
             with self.subTest(value=value), self.assertRaises(ValueError):
@@ -96,6 +118,22 @@ class MetadataTests(unittest.TestCase):
 
 
 class ResourceFailureTests(unittest.TestCase):
+    def test_access_failures_explain_unknown_and_preserve_causes(self):
+        def failed(target, timeout, same_origin_only=False):
+            return dict(url=target, status=None, body="", error="Connection refused", truncated=False)
+        with patch.object(discovery, "fetch", side_effect=failed):
+            report = discovery.audit("https://example.com")
+        self.assertTrue(all(f["status"] == "unknown" for f in report["findings"]))
+        for finding in report["findings"]:
+            self.assertIn("Connection refused", finding["evidence"])
+        rendered = discovery.markdown(report)
+        self.assertIn("audit incomplete", rendered)
+        self.assertIn("Not checked (5)", rendered)
+        self.assertNotIn("## UNKNOWN", rendered)
+        self.assertIn("UNKNOWN means not checked", rendered)
+        self.assertIn("Verify:", rendered)
+
+
     def test_protocol_errors_report_unknown_instead_of_crashing(self):
         import http.client
         with patch.object(discovery.urllib.request.OpenerDirector, "open", side_effect=http.client.BadStatusLine("invalid response")):

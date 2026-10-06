@@ -57,3 +57,9 @@ python3 -m unittest discover -s tests -v
 ```
 
 For actual indexing, use authorized Search Console URL Inspection. For rendered metadata and schema, inspect a rendered browser page and the relevant validation tool. Read [primary-source guidance](../skills/foundvia-discovery/references/discovery.md).
+
+## When a report is incomplete
+
+Network, DNS, TLS, or timeout failures are inspection failures, not evidence that the site's SEO is broken. Markdown reports lead with the inaccessible resources and original errors, then group UNKNOWN findings under **Not checked**. JSON retains individual unknown findings and the resource errors. Retry from an environment with access, or inspect the same resources with another available tool; keep TLS verification enabled.
+
+Canonical comparison treats an empty root path and `/` as equivalent, and normalizes hostname case and default ports. It preserves non-root trailing slashes, path case, query strings, and protocol differences. A different canonical still requires reviewing the intended URL.
