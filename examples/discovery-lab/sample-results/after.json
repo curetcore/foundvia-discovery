@@ -1,0 +1,162 @@
+{
+  "version": "0.2.0",
+  "requested_url": "http://127.0.0.1:60326/guide",
+  "final_url": "http://127.0.0.1:60326/guide",
+  "checked_at": "2026-10-06T18:10:46.091979+00:00",
+  "resources": [
+    {
+      "url": "http://127.0.0.1:60326/guide",
+      "status": 200,
+      "content_type": "text/html",
+      "x_robots_tag": [],
+      "truncated": false,
+      "error": null
+    },
+    {
+      "url": "http://127.0.0.1:60326/robots.txt",
+      "status": 200,
+      "content_type": "text/plain",
+      "x_robots_tag": [],
+      "truncated": false,
+      "error": null
+    },
+    {
+      "url": "http://127.0.0.1:60326/sitemap.xml",
+      "status": 200,
+      "content_type": "application/xml",
+      "x_robots_tag": [],
+      "truncated": false,
+      "error": null
+    }
+  ],
+  "findings": [
+    {
+      "check": "page-response",
+      "status": "pass",
+      "evidence": "HTTP 200 HTML at http://127.0.0.1:60326/guide",
+      "action": "No response blocker observed for this user agent.",
+      "location": "http://127.0.0.1:60326/guide",
+      "priority": null,
+      "confidence": "observed",
+      "verification": "Re-fetch the intended public URL; confirm the final status and HTML response."
+    },
+    {
+      "check": "noindex:Googlebot",
+      "status": "pass",
+      "evidence": "No applicable noindex observed in initial response.",
+      "action": "Confirm rendered metadata if JavaScript modifies the page.",
+      "location": "http://127.0.0.1:60326/guide",
+      "priority": null,
+      "confidence": "observed",
+      "verification": "Inspect initial and rendered metadata plus response headers; verify only authorized changes on the published page."
+    },
+    {
+      "check": "noindex:OAI-SearchBot",
+      "status": "info",
+      "evidence": "No generic noindex meta observed; provider-specific headers and scoped directives are not verified.",
+      "action": "OpenAI documents generic noindex meta for excluding links; preserve intentional exclusions and verify current publisher guidance.",
+      "location": "http://127.0.0.1:60326/guide",
+      "priority": "P3",
+      "confidence": "observed",
+      "verification": "Inspect initial and rendered metadata plus response headers; verify only authorized changes on the published page."
+    },
+    {
+      "check": "title",
+      "status": "pass",
+      "evidence": "How to put your music links in one Instagram bio",
+      "action": "Use a descriptive title; character counts are not ranking requirements.",
+      "location": "http://127.0.0.1:60326/guide",
+      "priority": null,
+      "confidence": "observed",
+      "verification": "Inspect the initial and rendered page; confirm that the content describes the actual product."
+    },
+    {
+      "check": "description",
+      "status": "pass",
+      "evidence": "A practical checklist for sharing music, shows and contact links in one public page.",
+      "action": "Describe the page accurately; search engines may choose their own snippet.",
+      "location": "http://127.0.0.1:60326/guide",
+      "priority": null,
+      "confidence": "observed",
+      "verification": "Inspect the initial and rendered page; confirm that the content describes the actual product."
+    },
+    {
+      "check": "h1",
+      "status": "pass",
+      "evidence": "1 H1 elements in initial HTML.",
+      "action": "Check rendered headings for a clear main topic; multiple H1s are not an automatic ranking failure.",
+      "location": "http://127.0.0.1:60326/guide",
+      "priority": null,
+      "confidence": "observed",
+      "verification": "Inspect the initial and rendered page; confirm that the content describes the actual product."
+    },
+    {
+      "check": "canonical",
+      "status": "pass",
+      "evidence": "http://127.0.0.1:60326/guide",
+      "action": "Review intended canonical; another URL can be intentional. HTTP Link headers are not checked.",
+      "location": "http://127.0.0.1:60326/guide",
+      "priority": null,
+      "confidence": "observed",
+      "verification": "Compare the intended canonical with the rendered link and redirect destination."
+    },
+    {
+      "check": "structured-data",
+      "status": "info",
+      "evidence": "0 JSON-LD script elements in initial HTML.",
+      "action": "Validate contents and rendered output. Presence alone does not prove valid or eligible schema.",
+      "location": "http://127.0.0.1:60326/guide",
+      "priority": "P3",
+      "confidence": "observed",
+      "verification": "Validate actual JSON-LD contents and rendered markup against the eligible page type."
+    },
+    {
+      "check": "robots:Googlebot",
+      "status": "pass",
+      "evidence": "Allowed — allow: /",
+      "action": "Review accidental restrictions and verify CDN bot access separately.",
+      "location": "http://127.0.0.1:60326/robots.txt",
+      "priority": null,
+      "confidence": "observed",
+      "verification": "Re-fetch robots.txt and evaluate the intended path for this bot; verify real bot/CDN access separately."
+    },
+    {
+      "check": "robots:OAI-SearchBot",
+      "status": "pass",
+      "evidence": "Allowed — allow: /",
+      "action": "Review accidental restrictions and verify CDN bot access separately.",
+      "location": "http://127.0.0.1:60326/robots.txt",
+      "priority": null,
+      "confidence": "observed",
+      "verification": "Re-fetch robots.txt and evaluate the intended path for this bot; verify real bot/CDN access separately."
+    },
+    {
+      "check": "robots:GPTBot",
+      "status": "info",
+      "evidence": "Disallowed — disallow: /",
+      "action": "Training policy is independent of search; preserve the publisher's choice.",
+      "location": "http://127.0.0.1:60326/robots.txt",
+      "priority": "P3",
+      "confidence": "observed",
+      "verification": "Re-fetch robots.txt and evaluate the intended path for this bot; verify real bot/CDN access separately."
+    },
+    {
+      "check": "sitemap",
+      "status": "pass",
+      "evidence": "1 URLs; audited URL present.",
+      "action": "This samples one file. Include intended canonical URLs; missing membership is not an indexing prohibition.",
+      "location": "http://127.0.0.1:60326/sitemap.xml",
+      "priority": null,
+      "confidence": "observed",
+      "verification": "Parse the intended sitemap and inspect canonical membership; use authorized Search Console for indexing evidence."
+    }
+  ],
+  "limits": [
+    "Initial responses only; no JavaScript rendering or actual bot impersonation.",
+    "One page, robots.txt, one same-origin sitemap; 1 MiB per response. Cross-origin sitemap redirects are not followed.",
+    "Google robots rules use the first 500 KiB; large-file handling for other providers is not verified.",
+    "OpenAI generic noindex meta is checked; its support for scoped meta and X-Robots-Tag is not assumed.",
+    "No indexing, ranking, citation, conversion, or Core Web Vitals verification.",
+    "Robots evaluator covers common rules; vendor-specific behavior and cached policies need separate verification."
+  ]
+}

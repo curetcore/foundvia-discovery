@@ -43,7 +43,7 @@ Disallowed — Disallow: /
 Next: Training policy is independent of search; preserve the publisher's choice.
 ```
 
-[Auditor options and limits →](docs/auditor.md)
+[Auditor options and limits →](docs/auditor.md) · [Practice a before/after fix locally →](examples/discovery-lab/README.md)
 
 ## Use it with your AI agent
 

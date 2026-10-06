@@ -29,3 +29,7 @@ Pídele a tu agente:
 La entrada principal y la nueva skill están en inglés. Los módulos originales en español siguen disponibles y muestran su estado de revisión en el [README principal](README.md#advanced-modules).
 
 [Guía en inglés](playbook/first-100-visits.md) · [Cómo funciona el auditor](docs/auditor.md) · [Comparación de skills](docs/skill-review.md) · [Contribuir](CONTRIBUTING.md)
+
+## Recorrido práctico
+
+Empieza por [tus primeras 100 visitas](playbook/first-100-visits.es.md). Incluye un [ejercicio local antes/después](examples/discovery-lab/README.md) y un [registro semanal copiable](templates/weekly-tracker.csv).
