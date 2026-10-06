@@ -27,6 +27,14 @@ Abre `audit.md` en tu editor. Cada hallazgo incluye **evidencia, siguiente acci�
 
 El auditor lee la respuesta inicial, las reglas de robots y un sitemap. No ejecuta JavaScript, no se hace pasar por un crawler ni confirma indexación, posiciones o visitas. [Opciones y límites →](docs/auditor.md)
 
+Para abrir el resultado en el navegador, exporta un archivo HTML:
+
+```bash
+python3 discovery.py audit https://example.com --format html > audit.html
+```
+
+Abre `audit.html`, filtra los hallazgos y despliega cada uno para leer la evidencia y el siguiente paso. Funciona sin conexión y trae su fuente incluida. La interfaz del reporte está en inglés.
+
 ## Entiende tu resultado
 
 | Etiqueta | Qué significa | Siguiente paso |
