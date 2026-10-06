@@ -20,7 +20,8 @@ Clone or download this repository using GitHub's **Code** button. Open the downl
 Audit **one intended public page**. Replace the URL with yours:
 
 ```bash
-python3 discovery.py audit \
+python3 discovery.py \
+  audit \
   https://your-site.com \
   > audit.md
 ```
@@ -96,7 +97,7 @@ The milestone is **100 measured sessions from Google organic and observed ChatGP
 - **Search Console:** Google's reported inspection and performance data. A live test does not guarantee indexing or search appearance.
 - **Analytics:** sessions and outcomes under your documented attribution rules. Missing referrers, copied UTMs and tracking gaps limit attribution.
 
-**Verified locally:** 32 Python tests, a fresh-copy lab run and a three-stage before/after example. The helper declares Python 3.10+; these local runs used Python 3.14.7. [O3 validation](docs/quality-results.md) · [O4 validation](docs/first-visits-validation.md)
+**Verified locally:** 35 Python tests, a fresh-copy lab run and a three-stage before/after example. The helper declares Python 3.10+; these local runs used Python 3.14.7. [O3 validation](docs/quality-results.md) · [O4 validation](docs/first-visits-validation.md)
 
 ## Find the next document
 

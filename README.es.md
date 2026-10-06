@@ -20,7 +20,8 @@ Clona o descarga este repositorio con el botón **Code** de GitHub. Abre la carp
 Revisa **una página que quieras hacer pública**. Cambia la URL por la tuya:
 
 ```bash
-python3 discovery.py audit \
+python3 discovery.py \
+  audit \
   https://tu-sitio.com \
   > audit.md
 ```
@@ -96,7 +97,7 @@ La meta es **100 sesiones medidas desde Google orgánico y referencias observada
 - **Search Console:** inspección y rendimiento reportados por Google. La prueba en vivo no garantiza indexación ni aparición.
 - **Analytics:** sesiones y resultados según tus reglas documentadas. Referencias ausentes, UTMs copiados y datos faltantes limitan la atribución.
 
-**Comprobado localmente:** 32 pruebas Python, ejercicio en copia limpia y ejemplo antes/después con tres etapas. El auditor declara Python 3.10+; estas pruebas locales usaron Python 3.14.7. [Validación O3](docs/quality-results.md) · [Validación O4](docs/first-visits-validation.md)
+**Comprobado localmente:** 35 pruebas Python, ejercicio en copia limpia y ejemplo antes/después con tres etapas. El auditor declara Python 3.10+; estas pruebas locales usaron Python 3.14.7. [Validación O3](docs/quality-results.md) · [Validación O4](docs/first-visits-validation.md)
 
 ## Encuentra el próximo documento
 
