@@ -20,23 +20,31 @@ Clone or download this repository using GitHub's **Code** button. Open the downl
 Audit **one intended public page**. Replace the URL with yours:
 
 ```bash
-python3 \
-discovery.py audit \
-https://example.com \
-> audit.md
+python3 discovery.py audit https://example.com > audit.md
 ```
 
 Open `audit.md` in your editor. Each finding includes **evidence, a next action and a verification step**. No account or API key is needed.
 
 The auditor reads the initial page response, robots rules and one sitemap. It does not render JavaScript, impersonate a crawler, or prove indexing, rankings or traffic. [Options and limits →](docs/auditor.md)
 
+## Read your result
+
+| Label | Meaning | Your next step |
+|---|---|---|
+| **BLOCK** | An observed response or directive needs review | Confirm whether it is intentional before changing it |
+| **WARN** | Something differs from the expected configuration | Inspect the evidence; a warning is not proof of ranking harm |
+| **UNKNOWN** | The tool could not complete the check | Read the access error and retry or use another evidence source |
+| **INFO** | Context or a scope limitation | Review it without treating it as a pass |
+| **PASS** | No issue observed in this specific check | Keep the scope in mind; this does not prove indexing or traffic |
+
+Each report begins with a coverage summary. If initial HTML is unavailable, it lists the metadata checks that were skipped. For automation, add `--fail-on-block --require-complete` to reject both observed blocks and incomplete reports. [Troubleshooting →](docs/troubleshooting.md)
+
 ## See a blocker become a verified change
 
 Try the controlled local example:
 
 ```bash
-python3 \
-discovery.py practice
+python3 discovery.py practice
 ```
 
 Open `outputs-local/discovery-lab/before.md`, then `after.md`. The command starts a temporary server on your own computer and stops it afterward.
@@ -61,17 +69,12 @@ GPTBot remains blocked in all three stages: training preferences are independent
 Install **just the flagship skill** with the [Skills CLI](https://github.com/vercel-labs/skills):
 
 ```bash
-org=ronaldships
-fv=foundvia-discovery
-npx skills add \
-"$org/$fv" \
---skill \
-foundvia-discovery
+npx skills add ronaldships/foundvia-discovery --skill foundvia-discovery
 ```
 
 Then ask:
 
-> Use foundvia-discovery to audit my public page. Show the evidence and propose one small fix in my repo. Keep training preferences and private areas intact. Verify the change; keep deployment separate.
+> Use foundvia-discovery to audit https://YOUR-PUBLIC-SITE.com. Show the evidence and propose one small fix in my repo. Keep training preferences and private areas intact. Verify the change; keep deployment separate.
 
 The skill can help inspect, fix, plan a useful page and measure results when you provide the necessary tools, evidence and authorization. The Python auditor also works on its own.
 
@@ -97,7 +100,7 @@ The milestone is **100 measured sessions from Google organic and observed ChatGP
 - **Search Console:** Google's reported inspection and performance data. A live test does not guarantee indexing or search appearance.
 - **Analytics:** sessions and outcomes under your documented attribution rules. Missing referrers, copied UTMs and tracking gaps limit attribution.
 
-**Verified locally:** 35 Python tests, a fresh-copy lab run and a three-stage before/after example. The helper declares Python 3.10+; these local runs used Python 3.14.7. [O3 validation](docs/quality-results.md) · [O4 validation](docs/first-visits-validation.md)
+**Quality checks:** controlled HTTP/parser/CLI tests, repository integrity checks, and a three-stage before/after lab. CI exercises Python 3.10 and 3.14 plus Node helper tests. [Latest audit and validation](docs/audit-validation.md). [O3 validation](docs/quality-results.md) · [O4 validation](docs/first-visits-validation.md)
 
 ## Find the next document
 

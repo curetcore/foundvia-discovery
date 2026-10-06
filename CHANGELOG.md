@@ -8,6 +8,17 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Unreleased]
 
+### Added
+- Report coverage summary, skipped HTML checks, and optional `--require-complete` exit status for automation.
+- Beginner troubleshooting, clearer status tables, reproducible issue form, and pull request template.
+- Offline local-link/package checks and CI coverage for Python 3.10 and 3.14.
+
+### Fixed
+- Inaccessible resources now retain the underlying error and group unchecked findings instead of repeated UNKNOWN sections.
+- Canonical and sitemap membership comparisons normalize equivalent root URLs without collapsing non-root paths or query strings.
+- Simplified first-run and skill installation commands; historical evaluation records are explicitly identified as snapshots.
+
+
 ## [3.0.0] — 2026-10-06
 
 ### Added
