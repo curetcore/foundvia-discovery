@@ -1,300 +1,128 @@
 <div align="center">
 
-# SEO + GEO Playbook
+![Foundvia Discovery — help your SaaS get found](assets/discovery-cover.svg)
 
-**El método que uso para que Google y ChatGPT empiecen a recomendar mis SaaS.**
+**An open-source discovery toolkit from [Foundvia](https://foundvia.dev).**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-1a1a2e?style=flat-square)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-v2.0.0-3b42f0?style=flat-square)](./CHANGELOG.md)
-[![Stack](https://img.shields.io/badge/Next.js-16-000?style=flat-square&logo=next.js)](https://nextjs.org)
-[![Threads](https://img.shields.io/badge/Threads-@ronaldships-000?style=flat-square&logo=threads)](https://www.threads.com/@ronaldships)
-[![GitHub stars](https://img.shields.io/github/stars/curetcore/seo-geo-playbook?style=flat-square)](https://github.com/curetcore/seo-geo-playbook)
+Find what blocks your SaaS on Google and ChatGPT. Fix it. Measure what happens.
 
-[Quick start](#-quick-start) · [Los 10 pilares](#-los-10-pilares) · [Casos reales](#-casos-reales) · [FAQ](#-faq)
+[![MIT](https://img.shields.io/badge/license-MIT-18181b)](LICENSE)
+[![Python](https://img.shields.io/badge/auditor-Python_3.10%2B-18181b)](skills/foundvia-discovery/scripts/discovery_audit.py)
+[![Dependencies](https://img.shields.io/badge/runtime_dependencies-zero-166534)](docs/auditor.md)
+
+[Start here](#start-with-your-site) · [Install the skill](#use-it-with-your-ai-agent) · [First 100 visits](playbook/first-100-visits.md) · [How it compares](docs/skill-review.md) · [Español](README.es.md)
 
 </div>
 
----
+## Start with your site
 
-> **No soy SEO consultant.** Soy founder de SaaS que necesita que ChatGPT lo recomiende, que Google lo indexe rápido, y que el tráfico llegue sin ads.
->
-> Esto es lo que uso **desde el día 1** de cada proyecto. Probado en producción. Documentado para que un LLM (o vos) pueda aplicarlo solo. En español. Gratis.
-
-<br>
-
-## 📊 Resultados reales
-
-<table>
-<tr>
-<td width="50%">
-
-### Linkship + Karrito (combinados)
-
-| | |
-|---|---|
-| **Visitas orgánicas/mes** | **+60,000** |
-| **Inversión en ads** | $0 |
-| **Usuarios pagando** | Decenas (mayoría desde ChatGPT) |
-| **Tiempo a tracción** | 4-8 semanas |
-
-</td>
-<td width="50%">
-
-### Sitios donde está aplicado
-
-[`linkship.cc`](https://linkship.cc) — link in bio SaaS
-20+ niche pages · 4 tools · 4 comparativas · 25 blog posts
-
-[`karrito.shop`](https://karrito.shop) — catálogo + WhatsApp
-290+ páginas · multi-idioma · checkout sin comisiones
-
-</td>
-</tr>
-</table>
-
-> No hay magia. Hay un sistema replicable. Eso es lo que está en este repo.
-
----
-
-## ⚡ Quick Start
-
-### Opción A — Instalar el skill pack en Claude Code (30 segundos)
+You shipped a useful product. Now you need to know whether people—and search crawlers—can find it.
 
 ```bash
-git clone https://github.com/curetcore/seo-geo-playbook.git
-cd seo-geo-playbook
-
-# Instalar agente + 10 sub-skills
-cp agents/seo-marketing.md ~/.claude/agents/
-cp -r skills/seo-* ~/.claude/skills/
+git clone https://github.com/curetcore/foundvia-discovery.git
+cd foundvia-discovery
+python3 skills/foundvia-discovery/scripts/discovery_audit.py https://your-site.com
 ```
 
-Listo. En cualquier proyecto Next.js le decís a Claude:
+No API keys. No paid crawler. No account. Python 3.10 or newer.
 
-> *"Hacé un audit SEO + GEO completo de este proyecto"*
+The auditor returns **evidence and a next action**, not a made-up ranking score. It checks one page, robots rules, and one sitemap. It does not run JavaScript or prove that your site is indexed.
 
-Y el agente delega a los sub-skills correctos según la matriz de decisión.
-
-### Opción B — Aplicarlo con un LLM cualquiera
-
-Copiá [este prompt](#prompt-completo-para-llm) y pegalo en Claude / ChatGPT / Cursor con tu proyecto abierto. El LLM lee el playbook, audita tu proyecto, propone cambios uno por uno.
-
-### Opción C — Leerlo a mano
-
-Andá directo a [`playbook/ai-seo.md`](./playbook/ai-seo.md) — el corazón del repo. Si solo vas a leer un archivo, leé ese.
-
----
-
-## 🧭 Cómo está organizado
+Illustrative output:
 
 ```text
-seo-geo-playbook/
-├── playbook/      ← documentación educacional (humanos)
-├── agents/        ← decision-framework para Claude Code
-└── skills/        ← 10 sub-skills instalables
+BLOCK · noindex:Googlebot
+meta robots: noindex
+Next: Confirm whether exclusion is intentional; remove only on public search pages.
+
+PASS · robots:OAI-SearchBot
+Allowed — Allow: /
+
+INFO · robots:GPTBot
+Disallowed — Disallow: /
+Next: Training policy is independent of search; preserve the publisher's choice.
 ```
 
-**Dual-use por diseño**: lo podés leer como manual o instalar como agente. La misma información, dos formas de consumirla.
+[Auditor options and limits →](docs/auditor.md)
 
----
+## Use it with your AI agent
 
-## 🎯 Los 10 pilares
+Install just the flagship skill with the [Skills CLI](https://github.com/vercel-labs/skills):
 
-| | Skill | Playbook | Qué cubre |
-|--:|-------|:--------:|-----------|
-| 1 | [`seo-technical`](./skills/seo-technical/) | [📖](./playbook/technical.md) | Core Web Vitals, robots.ts, sitemap, security headers |
-| 2 | [`seo-on-page`](./skills/seo-on-page/) | [📖](./playbook/on-page.md) | Meta tags, headings, OG images, internal linking |
-| 3 | [`seo-ai-geo`](./skills/seo-ai-geo/) ⭐ | [📖](./playbook/ai-seo.md) | **AEO/GEO — llms.txt, AI Overviews, BLUF, citabilidad** |
-| 4 | [`seo-content-strategy`](./skills/seo-content-strategy/) | [📖](./playbook/content-strategy.md) | Content clusters, E-E-A-T, keyword research |
-| 5 | [`seo-local`](./skills/seo-local/) | [📖](./playbook/local-seo.md) | GBP, NAP, LocalBusiness, multi-location |
-| 6 | [`seo-analytics`](./skills/seo-analytics/) | [📖](./playbook/analytics.md) | GSC, web-vitals RUM, AI referral tracking |
-| 7 | [`seo-growth-engine`](./skills/seo-growth-engine/) ⭐ | [📖](./playbook/growth-engine.md) | **Tools, blog, comparativas, outreach end-to-end** |
-| 8 | [`seo-slug-dates`](./skills/seo-slug-dates/) | [📖](./playbook/slug-date-distribution.md) | Anti-batch signal — 50+ páginas programáticas |
-| 9 | [`seo-nextjs-implementation`](./skills/seo-nextjs-implementation/) | — | Código TypeScript: JSON-LD generators, `generateMetadata` |
-| 10 | [`seo-audit-website`](./skills/seo-audit-website/) | — | Auditoría automatizada con squirrelscan CLI |
-
-⭐ = los dos que más mueven la aguja en 2026.
-
-> **Orden de implementación recomendado** para proyecto nuevo: 1 → 2 → 9 → 3 → 4 → (5 si aplica) → 6 → 7 → (8 si tenés 50+ páginas) → 10. Detalles en [`playbook/_index.md`](./playbook/_index.md).
-
----
-
-## 🤖 La parte que más se está demandando: GEO
-
-**Generative Engine Optimization** = optimizar para que ChatGPT, Claude, Perplexity y Google AI Overviews te recomienden cuando alguien pregunta algo de tu nicho.
-
-| Stat | Valor |
-|------|-------|
-| ChatGPT búsquedas/semana | **+1 billón** |
-| Google AI Overviews reducen CTR tradicional | **~34.5%** |
-| Tráfico IA a e-commerce 2024-2025 | **+1,300%** |
-| Conversión AI search vs SEO tradicional | **5.53% vs 3.7%** |
-
-**Si solo vas a leer un archivo, leé [`playbook/ai-seo.md`](./playbook/ai-seo.md).** Cubre `llms.txt`, robots para AI bots (GPTBot, ClaudeBot, PerplexityBot), patrones de citabilidad, BLUF, FAQ schema y verificación de presencia en LLMs.
-
----
-
-## 📂 Casos reales
-
-Archivos `llms.txt` y `robots.txt` reales de los sitios donde aplico esto. No ejemplos teóricos — lo que está sirviendo en producción ahora mismo.
-
-| Archivo | Fuente | Notas |
-|---------|--------|-------|
-| [`linkship-llms.txt`](./examples/linkship-llms.txt) | linkship.cc | Multi-idioma (es / en / pt), 1175 líneas, con templates AEO |
-| [`linkship-robots.txt`](./examples/linkship-robots.txt) | linkship.cc | Strategy AI bots completa |
-| [`karrito-llms.txt`](./examples/karrito-llms.txt) | karrito.shop | Más conciso, bilingüe en TL;DR |
-| [`karrito-robots.txt`](./examples/karrito-robots.txt) | karrito.shop | Versión simple |
-
----
-
-## 🛠 Stack
-
-- **Next.js 16** con App Router (el código aplica desde Next.js 14+)
-- **TypeScript** estricto
-- **Tailwind v4** puro (sin daisy-ui, sin frameworks de componentes)
-- **Vercel** + Cloudflare DNS
-- **Search Console** + **PostHog** + **web-vitals** RUM
-
-La estrategia (todo lo de `playbook/`) aplica a **cualquier stack** — WordPress, Astro, SvelteKit, Webflow, Shopify. El código TypeScript es bonus para devs Next.js.
-
----
-
-## ❓ FAQ
-
-<details>
-<summary><strong>¿Funciona en WordPress / Shopify / Webflow?</strong></summary>
-<br>
-
-Sí, la estrategia (`playbook/`) aplica a cualquier stack. Lo que NO aplica es el código TypeScript — eso es Next.js específico. Los conceptos los podés llevar a tu plataforma.
-
-</details>
-
-<details>
-<summary><strong>¿Cuánto tarda en mostrar resultados?</strong></summary>
-<br>
-
-| Hito | Tiempo |
-|------|--------|
-| Indexación rica (rich snippets, FAQ schema) | 2-4 semanas |
-| Tráfico orgánico inicial | 4-8 semanas |
-| Volumen significativo | 2-4 meses |
-| Citaciones consistentes en ChatGPT/Perplexity | 3-6 meses |
-
-No hay shortcuts. Si alguien te promete resultados SEO en 7 días, está mintiendo o usa técnicas blackhat que después te cuestan caro.
-
-</details>
-
-<details>
-<summary><strong>¿Necesito ser dev para usar esto?</strong></summary>
-<br>
-
-- **Si vas a usar el código** (`seo.ts`, snippets de implementación): sí, nivel intermedio Next.js
-- **Si solo querés la estrategia** (`playbook/`): no, un LLM puede aplicarla a tu sitio leyendo los archivos
-
-</details>
-
-<details>
-<summary><strong>¿Por qué el playbook está en español?</strong></summary>
-<br>
-
-Porque mi audiencia es LATAM y porque hay menos contenido SEO honesto en español que en inglés. Si necesitás versión en inglés, abrí un [issue](https://github.com/curetcore/seo-geo-playbook/issues).
-
-</details>
-
-<details>
-<summary><strong>¿Me podés ayudar con SEO de mi proyecto?</strong></summary>
-<br>
-
-No hago consultoría. El repo es exactamente lo que recomendaría — está todo acá. Si tenés dudas específicas después de leerlo, abrí un issue o mencioname en Threads.
-
-</details>
-
----
-
-## 🚫 Cuándo NO usar este playbook
-
-Sé honesto con vos mismo:
-
-- ❌ Si tu producto **no resuelve un problema real** — SEO no salva un producto malo
-- ❌ Si tu sitio **carga en >5 segundos** — arreglá eso primero ([`seo-technical`](./skills/seo-technical/))
-- ❌ Si **no tenés audiencia ni siquiera en 0** — el playbook complementa distribución, no la reemplaza
-- ❌ Si esperás **crecimiento en 2 semanas** — esto toma 2-4 meses mínimo
-- ❌ Si querés **comprar backlinks** — eso es spam, no SEO
-
----
-
-## 📜 Prompt completo para LLM
-
-Si preferís que un LLM (Claude/ChatGPT/Cursor) aplique el playbook a tu proyecto sin instalar skills:
-
-<details>
-<summary>Click para expandir el prompt</summary>
-
-```text
-Tengo un proyecto en [stack: Next.js / WordPress / Astro / Shopify / etc.]
-sobre [nicho: SaaS de productividad / e-commerce de ropa / etc.].
-Mi sitio es [tudominio.com].
-
-Quiero implementar el SEO + GEO Playbook completo. Los archivos están en:
-https://github.com/curetcore/seo-geo-playbook
-
-Hacelo así, conmigo:
-
-1. Leé los archivos de playbook/ del repo (si tenés acceso a terminal:
-   `git clone https://github.com/curetcore/seo-geo-playbook playbook`
-   y abrí esa carpeta).
-
-2. Auditá honestamente mi proyecto actual:
-   - Qué pilares ya tengo implementados
-   - Cuáles me faltan
-   - Cuáles tengo a medias
-   Mostrame el resultado en una tabla.
-
-3. Empezá por el orden recomendado en playbook/_index.md
-   (technical → on-page → JSON-LD → ai-seo → content-strategy → ...).
-
-4. Para cada pilar:
-   - Mostrame los cambios concretos que harías en mis archivos
-   - Esperá mi aprobación antes de modificar nada
-   - Adaptá los ejemplos genéricos a mi marca real
-   - Si hay decisiones que dependen de mi nicho, preguntame antes de asumir
-
-5. Pausá entre cada pilar para que pueda revisar y validar.
-
-Empezá ahora con el audit. Si necesitás más info de mi proyecto,
-preguntame antes de asumir.
+```bash
+npx skills add curetcore/foundvia-discovery --skill foundvia-discovery
 ```
 
-> **Tip**: si vas con Claude Code, tenés el bonus de que puede ejecutar comandos (git, npm, lighthouse). Si vas con ChatGPT/Cursor, los cambios los hacés manualmente con su guía.
+Or copy the self-contained `skills/foundvia-discovery` folder into your agent's skill directory. See [installation](docs/install.md).
 
-</details>
+Then ask:
 
----
+> Use foundvia-discovery to audit https://my-saas.com. Show the evidence, fix the blockers in my repo, and propose one useful page to help me reach my first 100 visits. Keep deployment separate.
 
-## 🗺 Roadmap
+The skill supports four modes:
 
-- [ ] Casos de estudio detallados con métricas mes a mes
-- [ ] "Errores que cometí los primeros 6 meses"
-- [ ] Templates de prompts para auditorías con LLMs
-- [ ] Patterns específicos para e-commerce LATAM
-- [ ] Más ejemplos en `examples/` (sitemap snippets, OG image templates)
+| Mode | What you get |
+|---|---|
+| Audit | Observed blockers, evidence, confidence, and verification steps |
+| Fix | Scoped code changes and checks when you provide code access and authorization |
+| Launch | A customer question, content brief, original evidence, and relevant distribution venue |
+| Measure | Visits and conversion signals with consistent dates and attribution limits |
 
-Sugerencias o errores → [issue](https://github.com/curetcore/seo-geo-playbook/issues).
+It works without a particular agent or hosting platform. The auditor requires Python; browser checks and analytics access depend on your environment.
 
----
+## Your first 100 visits
 
-## 📄 Licencia
+A practical milestone: **100 measured sessions from Google organic and ChatGPT**, counted separately and then combined. It is a target, not a guarantee or deadline.
 
-[MIT](LICENSE) — usar, modificar, distribuir libre.
+![The discovery path: access, clarity, evidence, measure](assets/discovery-path.svg)
 
-Si te sirvió, mencioname en Threads ([@ronaldships](https://www.threads.com/@ronaldships)). Cierra el círculo y me ayuda a saber qué profundizar.
+1. **Remove blockers.** Inspect HTTP responses, noindex, robots, canonicals, and the sitemap.
+2. **Answer a real question.** Use a tested tutorial, an honest comparison, or a product page with original evidence.
+3. **Make it reachable.** Add relevant internal links and submit the correct sitemap in Search Console.
+4. **Measure arrivals and useful actions.** Keep Search Console clicks, analytics sessions, signups, and payments separate.
 
----
+[Read the English guide →](playbook/first-100-visits.md) · [Copy the report template →](skills/foundvia-discovery/references/report-template.md) · [Blank tracking sheets →](templates/)
 
-<div align="center">
+## Why this exists
 
-Construido por [**Ronaldo Paulino**](https://www.threads.com/@ronaldships) — [linkship.cc](https://linkship.cc) · [karrito.shop](https://karrito.shop)
+Foundvia Discovery grew out of the SEO + GEO Playbook. We are turning the playbook into something you can **run, inspect, and improve together**.
 
-Más drops del stack en [Threads](https://www.threads.com/@ronaldships): agentes de Claude Code, slash commands, boilerplate Next.js.
+The flagship includes an executable auditor, controlled-response tests, primary-source references, and behavioral evaluation scenarios. [The review](docs/skill-review.md) explains what we learned from public skills by Corey Haines, Vercel, and Anthropic—and which claims still need testing.
 
-</div>
+We do not promise citations, traffic, or timelines. Search access does not imply training consent. `llms.txt` is optional documentation, not a Google ranking requirement. Publication dates must reflect actual events.
+
+## Advanced modules
+
+The original modules remain available for focused work. Several are still Spanish and contain historical examples; their quality-review status is explicit below. Start with the flagship, and verify provider-specific advice before applying older snippets.
+
+| Module | Purpose | Review status |
+|---|---|---|
+| [foundvia-discovery](skills/foundvia-discovery/) | Public discovery audit → fixes → launch experiment → measurement | New; helper tested, model evaluations pending |
+| [seo-ai-geo](skills/seo-ai-geo/) | Search eligibility and independent crawler policies | Core guidance corrected; historical references marked |
+| [seo-slug-dates](skills/seo-slug-dates/) | Truthful content dates and migration away from generated history | Replaced fabricated-date guidance |
+| [seo-technical](skills/seo-technical/) | Technical SEO and performance | Legacy; full review pending |
+| [seo-on-page](skills/seo-on-page/) | Metadata, headings, links | Legacy; full review pending |
+| [seo-content-strategy](skills/seo-content-strategy/) | Customer problems and content | Legacy; full review pending |
+| [seo-local](skills/seo-local/) | Location-based businesses | Legacy; full review pending |
+| [seo-analytics](skills/seo-analytics/) | Search Console and traffic measurement | Legacy; full review pending |
+| [seo-growth-engine](skills/seo-growth-engine/) | Content and distribution at scale | Legacy; full review pending |
+| [seo-nextjs-implementation](skills/seo-nextjs-implementation/) | TypeScript metadata and schema helpers | Legacy; full review pending |
+| [seo-audit-website](skills/seo-audit-website/) | Optional squirrelscan integration | Third-party; not required by flagship |
+
+Historical examples in [examples/](examples/) are snapshots, not proof of current production behavior or causal results.
+
+## Build with us
+
+Run the tests:
+
+```bash
+python3 -m unittest discover -s tests -v
+```
+
+Found an incorrect recommendation? Open an issue with the URL, evidence, and expected behavior. Have a real result? Share dates, what changed, and what you measured. No tokens or customer data.
+
+[Contributing](CONTRIBUTING.md) · [Behavioral evaluation cases](evals/discovery-cases.json) · [Release notes](CHANGELOG.md) · [Distribution plan](docs/distribution.md)
+
+If this helps you ship a useful fix, a star helps others discover the toolkit. Contributions and honest field reports help us improve it.
+
+Built by [Ronaldo Paulino](https://x.com/ronaldships) for [Foundvia](https://foundvia.dev). [MIT licensed](LICENSE).

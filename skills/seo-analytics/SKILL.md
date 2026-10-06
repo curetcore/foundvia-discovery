@@ -3,6 +3,8 @@ name: seo-analytics
 description: Configura monitoreo SEO completo — Google Search Console (GSC), Core Web Vitals RUM con web-vitals + PostHog, AI referral tracking (ChatGPT, Perplexity, Claude), rank tracking, competitor analysis y cadencia de auditorías. Use this skill whenever the user asks about Search Console setup, GSC reports, web-vitals tracking, RUM monitoring, AI traffic tracking, ChatGPT referrals, rank tracking, SEO audit cadence, or competitor SEO analysis — even if they don't say "analytics".
 ---
 
+> **Historical module — full review pending.** Follow the [corrected discovery guidance](../foundvia-discovery/references/discovery.md) before applying these examples. Do not invent dates, treat training bots as search bots, require llms.txt/FAQ markup, count all Bing as Copilot, or use word counts as ranking rules.
+
 # SEO Analytics
 
 Cubre Google Search Console, Core Web Vitals monitoring, AI referral tracking, rank tracking y cadencia de auditorías. Stack: Next.js 16, PostHog, web-vitals.

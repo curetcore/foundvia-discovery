@@ -3,6 +3,8 @@ name: seo-growth-engine
 description: Diseña e implementa un Growth Engine completo para SaaS — niche landing pages (`/para/[nicho]`), micro-tools gratuitas (`/tools/[slug]`), comparativas data-driven (`/vs/[competitor]`), blog MDX a escala, AEO con llms.txt, y outreach a directorios. Use this skill whenever the user mentions programmatic SEO, niche pages, tools landing pages, comparison pages, alternative pages, blog at scale, MDX blog, Product Hunt, directory submissions, backlinks strategy, or asks how to scale organic traffic from zero — even if they don't say "growth engine".
 ---
 
+> **Historical module — full review pending.** Follow the [corrected discovery guidance](../foundvia-discovery/references/discovery.md) before applying these examples. Do not invent dates, treat training bots as search bots, require llms.txt/FAQ markup, count all Bing as Copilot, or use word counts as ranking rules.
+
 # Growth Engine
 
 Sistema completo de páginas interconectadas para generar tráfico orgánico sin ads. Probado en Linkship: 60+ páginas indexables, 50+ keywords target, red densa de internal linking. Stack: Next.js 16 App Router, MDX, Tailwind v4.

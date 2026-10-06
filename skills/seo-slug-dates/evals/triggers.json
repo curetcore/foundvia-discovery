@@ -3,82 +3,27 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "Tengo 318 páginas programáticas en mi sitio y todas con publishedAt = 2025-12-01, Google las puede detectar como content farm?",
+      "prompt": "My sitemap lastmod resets at every deploy.",
       "should_trigger": true
     },
     {
       "id": 2,
-      "prompt": "Cómo distribuyo fechas por slug para que cada página tenga publishedAt distinto pero determinístico",
+      "prompt": "Generate old publication dates from slugs.",
       "should_trigger": true
     },
     {
       "id": 3,
-      "prompt": "Mi sitemap.xml tiene 500 URLs con el mismo lastmod, eso es mal signal?",
+      "prompt": "These CMS publication dates look wrong.",
       "should_trigger": true
     },
     {
       "id": 4,
-      "prompt": "Estoy por escalar mi programmatic SEO de 50 a 500 páginas, qué hago con las fechas",
-      "should_trigger": true
+      "prompt": "My LCP is four seconds.",
+      "should_trigger": false
     },
     {
       "id": 5,
-      "prompt": "Necesito un hash determinístico djb2 que mapee slugs a fechas en rangos por categoría",
-      "should_trigger": true
-    },
-    {
-      "id": 6,
-      "prompt": "Mis comparativas todas tienen la misma fecha de publicación, eso afecta SEO?",
-      "should_trigger": true
-    },
-    {
-      "id": 7,
-      "prompt": "Anti-batch signal para Google, cómo lo aplico en Next.js sitemap.ts",
-      "should_trigger": true
-    },
-    {
-      "id": 8,
-      "prompt": "Cómo evito que Google interprete mi sitio como auto-generado por las fechas",
-      "should_trigger": true
-    },
-    {
-      "id": 9,
-      "prompt": "Mi LCP es de 4 segundos",
-      "should_trigger": false
-    },
-    {
-      "id": 10,
-      "prompt": "Implementar llms.txt para ChatGPT",
-      "should_trigger": false
-    },
-    {
-      "id": 11,
-      "prompt": "Setup de Google Business Profile",
-      "should_trigger": false
-    },
-    {
-      "id": 12,
-      "prompt": "Multi-location schema",
-      "should_trigger": false
-    },
-    {
-      "id": 13,
-      "prompt": "Generador de QR client-side",
-      "should_trigger": false
-    },
-    {
-      "id": 14,
-      "prompt": "Stripe checkout trial",
-      "should_trigger": false
-    },
-    {
-      "id": 15,
-      "prompt": "Author bio con Person schema",
-      "should_trigger": false
-    },
-    {
-      "id": 16,
-      "prompt": "Setup de Tailwind v4 desde cero",
+      "prompt": "Create a product pricing page.",
       "should_trigger": false
     }
   ]

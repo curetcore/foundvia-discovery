@@ -3,6 +3,8 @@ name: seo-on-page
 description: Optimiza meta tags, headings, URLs, imágenes, Open Graph y internal linking para SEO on-page en Next.js. Use this skill whenever the user mentions title tags, meta descriptions, generateMetadata, Open Graph, Twitter Cards, OG images, heading hierarchy (H1/H2/H3), URL structure, alt text, anchor text, canonical tags, or social sharing previews — even if they don't explicitly say "SEO on-page".
 ---
 
+> **Historical module — full review pending.** Follow the [corrected discovery guidance](../foundvia-discovery/references/discovery.md) before applying these examples. Do not invent dates, treat training bots as search bots, require llms.txt/FAQ markup, count all Bing as Copilot, or use word counts as ranking rules.
+
 # SEO On-Page
 
 Cubre meta tags, headings, URLs, imágenes, Open Graph y linking interno. Stack: Next.js 16 App Router, React 19 RSC.

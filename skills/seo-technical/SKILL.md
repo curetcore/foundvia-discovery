@@ -3,6 +3,8 @@ name: seo-technical
 description: Audita y optimiza el SEO técnico de un proyecto Next.js — Core Web Vitals (LCP/INP/CLS), crawlability (robots.ts, sitemap.ts), security headers, page speed y arquitectura del sitio. Use this skill whenever the user mentions Core Web Vitals, lighthouse scores, slow page loads, INP issues, robots.txt, sitemap, security headers, HSTS, CSP, canonical URLs, mobile usability, or asks for an SEO technical audit — even if they don't explicitly say "SEO".
 ---
 
+> **Historical module — full review pending.** Follow the [corrected discovery guidance](../foundvia-discovery/references/discovery.md) before applying these examples. Do not invent dates, treat training bots as search bots, require llms.txt/FAQ markup, count all Bing as Copilot, or use word counts as ranking rules.
+
 # SEO Técnico
 
 Stack base: Next.js 16 App Router, React 19 RSC, Tailwind v4. Las técnicas aplican a cualquier framework moderno; los snippets son Next.js específicos.

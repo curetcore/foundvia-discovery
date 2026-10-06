@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="250" viewBox="0 0 1200 250" role="img" aria-labelledby="title desc">
+<title id="title">The discovery path</title><desc id="desc">Check access, create a useful answer, provide real evidence, then measure arrivals and actions. A measured milestone is not a traffic guarantee.</desc>
+<rect width="1200" height="250" rx="20" fill="#fafafa"/>
+<g font-family="Arial,Helvetica,sans-serif">
+<g fill="#fff" stroke="#d4d4d8"><rect x="24" y="31" width="262" height="149" rx="12"/><rect x="321" y="31" width="262" height="149" rx="12"/><rect x="618" y="31" width="262" height="149" rx="12"/><rect x="915" y="31" width="262" height="149" rx="12"/></g>
+<g stroke="#71717a" stroke-width="2" fill="none"><path d="M295 105h16m-6-5 6 5-6 5"/><path d="M591 105h17m-6-5 6 5-6 5"/><path d="M888 105h17m-6-5 6 5-6 5"/></g>
+<g fill="#71717a" font-size="16"><text x="45" y="62">01 / ACCESS</text><text x="342" y="62">02 / ANSWER</text><text x="639" y="62">03 / EVIDENCE</text><text x="936" y="62">04 / MEASURE</text></g>
+<g fill="#18181b" font-size="25" font-weight="700"><text x="45" y="103">Remove blockers</text><text x="342" y="103">Solve a real problem</text><text x="639" y="103">Show your work</text><text x="936" y="103">Count real visits</text></g>
+<g fill="#52525b" font-size="18"><text x="45" y="143">HTTP · robots · noindex</text><text x="342" y="143">Helpful public content</text><text x="639" y="143">Tests · sources · examples</text><text x="936" y="143">Sessions + useful actions</text></g>
+<text x="600" y="221" fill="#52525b" text-anchor="middle" font-size="18">100 visits is a learning milestone. Access and content do not guarantee discovery.</text>
+</g></svg>
