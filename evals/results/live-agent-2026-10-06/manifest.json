@@ -9,5 +9,8 @@
   ],
   "limits": "One run per case; no cross-agent certification or comparative uplift claim. Isolated workspace; network enabled for public audits only.",
   "tested_source_commit": "a0b68fc32a504d8c6f09510005ccf89a1a296aac",
-  "catalog_note": "Other skills and tools may be available. The unreachable run emitted a skills-context truncation warning; its flagship was still explicitly read and executed. This is not a catalog-isolated comparison."
+  "catalog_note": "Other skills and tools may be available. The unreachable run emitted a skills-context truncation warning; its flagship was still explicitly read and executed. This is not a catalog-isolated comparison.",
+  "skills_context_budget": 2000,
+  "project_doc_max_bytes": 0,
+  "user_configuration": "Ignored for subprocess; existing CLI authentication retained"
 }

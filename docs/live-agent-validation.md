@@ -16,7 +16,7 @@ All 15 authored behavioral assertions passed in same-author manual review. This 
 
 Codex CLI 0.157.0; default CLI model, with no model override. The subprocess used workspace-write sandboxing and network access for public fetches. Existing ChatGPT CLI authentication was used; no paid API key was configured or purchased. The skill's source commit and helper hash are recorded in the manifest.
 
-The tests used isolated **project folders**, not a proven exclusive skill catalog. Other skills and tools could be available. The inaccessible-URL run emitted a context-budget warning that removed skill descriptions; it still explicitly opened and executed Foundvia. That warning is preserved in the review record rather than hidden or treated as a clean catalog test.
+The tests used isolated **project folders**, not a proven exclusive skill catalog. Other skills and tools could be available. The test set a 2,000-token skill-catalog budget. The inaccessible-URL run emitted a context-budget warning that removed skill descriptions; it still explicitly opened and executed Foundvia. That warning is preserved in the review record rather than hidden or treated as a clean catalog test.
 
 The karrito.app run demonstrates selection for this one relevant request in this environment. It does not certify every wording, Claude Code/Cursor/other agents, or all model versions. A completed initial-response audit does not prove real crawler access, JavaScript rendering, indexing, citations, conversions, or growth. The local failure control is not a reproduction of a specific user's unknown setup.
 
