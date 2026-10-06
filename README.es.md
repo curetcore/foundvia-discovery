@@ -20,10 +20,10 @@ Clona o descarga este repositorio con el botón **Code** de GitHub. Abre la carp
 Revisa **una página que quieras hacer pública**. Cambia la URL por la tuya:
 
 ```bash
-python3 discovery.py \
-  audit \
-  https://tu-sitio.com \
-  > audit.md
+python3 \
+discovery.py audit \
+https://example.com \
+> audit.md
 ```
 
 Abre `audit.md` en tu editor. Cada hallazgo incluye **evidencia, siguiente acción y cómo verificarla**. No necesitas cuenta ni API key.
@@ -35,8 +35,8 @@ El auditor lee la respuesta inicial, las reglas de robots y un sitemap. No ejecu
 Prueba el ejercicio local:
 
 ```bash
-python3 discovery.py \
-  practice
+python3 \
+discovery.py practice
 ```
 
 Abre `outputs-local/discovery-lab/before.md` y después `after.md`. El servidor temporal funciona en tu computadora y se cierra al terminar.
@@ -62,11 +62,11 @@ Instala **solo el skill principal** con [Skills CLI](https://github.com/vercel-l
 
 ```bash
 org=ronaldships
-repo=foundvia-discovery
+fv=foundvia-discovery
 npx skills add \
-  "$org/$repo" \
-  --skill \
-  foundvia-discovery
+"$org/$fv" \
+--skill \
+foundvia-discovery
 ```
 
 Después pídele:
@@ -115,7 +115,7 @@ Ejecuta las pruebas Python:
 
 ```bash
 python3 -m unittest \
-  discover -s tests -v
+discover -s tests -v
 ```
 
 Lee [CONTRIBUTING](CONTRIBUTING.md) para aportar. Si te ayudó a encontrar un problema real, una estrella ayuda a que otros builders lo descubran. Los aportes reproducibles lo hacen más útil.

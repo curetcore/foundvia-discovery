@@ -20,10 +20,10 @@ Clone or download this repository using GitHub's **Code** button. Open the downl
 Audit **one intended public page**. Replace the URL with yours:
 
 ```bash
-python3 discovery.py \
-  audit \
-  https://your-site.com \
-  > audit.md
+python3 \
+discovery.py audit \
+https://example.com \
+> audit.md
 ```
 
 Open `audit.md` in your editor. Each finding includes **evidence, a next action and a verification step**. No account or API key is needed.
@@ -35,8 +35,8 @@ The auditor reads the initial page response, robots rules and one sitemap. It do
 Try the controlled local example:
 
 ```bash
-python3 discovery.py \
-  practice
+python3 \
+discovery.py practice
 ```
 
 Open `outputs-local/discovery-lab/before.md`, then `after.md`. The command starts a temporary server on your own computer and stops it afterward.
@@ -62,11 +62,11 @@ Install **just the flagship skill** with the [Skills CLI](https://github.com/ver
 
 ```bash
 org=ronaldships
-repo=foundvia-discovery
+fv=foundvia-discovery
 npx skills add \
-  "$org/$repo" \
-  --skill \
-  foundvia-discovery
+"$org/$fv" \
+--skill \
+foundvia-discovery
 ```
 
 Then ask:
@@ -115,7 +115,7 @@ Run the Python checks locally:
 
 ```bash
 python3 -m unittest \
-  discover -s tests -v
+discover -s tests -v
 ```
 
 [Contributing](CONTRIBUTING.md) explains the workflow. If the toolkit helped you find a real issue, a star helps other builders discover it. Contributions with reproducible evidence make it more useful.
