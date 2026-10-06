@@ -39,6 +39,16 @@ El auditor lee la respuesta inicial, las reglas de robots y un sitemap. No ejecu
 
 Cada reporte empieza con un resumen de cobertura. Si no pudo leer el HTML, enumera las comprobaciones omitidas. Para automatizaciones, añade `--fail-on-block --require-complete` y rechaza tanto bloqueos observados como reportes incompletos. [Solución de problemas →](docs/troubleshooting.md)
 
+### ¿Tu sitemap es un índice?
+
+Revisa hasta tres archivos hijos para comprobar si incluyen la página auditada:
+
+```bash
+python3 discovery.py audit https://example.com --sitemap-children 3
+```
+
+El reporte indica dónde encontró la URL y si la cobertura es parcial o algún archivo falló. Estar en el sitemap no confirma indexación. [Cómo funciona →](docs/auditor.md#check-a-sitemap-indexs-children)
+
 ## Comprueba una corrección real
 
 Prueba el ejercicio local:

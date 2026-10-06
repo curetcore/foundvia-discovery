@@ -210,21 +210,28 @@ def noindex_evidence(page, headers, bot):
     return results
 
 
-def audit(target, timeout=10):
+def audit(target, timeout=10, sitemap_children=0):
+    if not isinstance(sitemap_children, int) or not 0 <= sitemap_children <= 5:
+        raise ValueError("Sitemap child limit must be an integer between 0 and 5.")
     target = clean_url(target)
     findings, resources = [], []
+    sitemap_coverage = dict(child_limit=sitemap_children, index_entries=0, children_requested=0,
+                            children_parsed=0, membership="not_checked", matching_sitemaps=[],
+                            partial=False)
 
-    def record(check, status, evidence, action):
+    def record(check, status, evidence, action, location=None):
         verification = {
             "page-response": "Re-fetch the intended public URL; confirm the final status and HTML response.",
             "noindex": "Inspect initial and rendered metadata plus response headers; verify only authorized changes on the published page.",
             "robots": "Re-fetch robots.txt and evaluate the intended path for this bot; verify real bot/CDN access separately.",
+            "sitemap-child": "Re-fetch and parse this same-origin child sitemap; compare its public URLs with the intended canonical.",
+            "sitemap-membership": "Inspect the reported sitemap coverage and canonical membership; actual indexing requires authorized Search Console evidence.",
             "sitemap": "Parse the intended sitemap and inspect canonical membership; use authorized Search Console for indexing evidence.",
             "canonical": "Compare the intended canonical with the rendered link and redirect destination.",
             "structured-data": "Validate actual JSON-LD contents and rendered markup against the eligible page type.",
         }.get(check.split(":")[0], "Inspect the initial and rendered page; confirm that the content describes the actual product.")
         findings.append(dict(check=check, status=status, evidence=evidence, action=action,
-                             location=resources[-1]["url"] if resources else target,
+                             location=location or (resources[-1]["url"] if resources else target),
                              priority={"block": "P1", "unknown": "P2", "warn": "P2", "info": "P3", "pass": None}[status],
                              confidence="not_checked" if status == "unknown" else "observed",
                              verification=verification))
@@ -308,9 +315,70 @@ def audit(target, timeout=10):
             raise ValueError("Unexpected XML root: " + kind)
         entries = [(element.text or "").strip() for element in root.iter() if element.tag.split("}")[-1] == "loc"]
         if kind == "sitemapindex":
-            record("sitemap", "info", "Sitemap index with " + str(len(entries)) + " children. Children not fetched.", "Inspect the appropriate child to check inclusion of the audited URL.")
+            sitemap_coverage["index_entries"] = len(entries)
+            record("sitemap", "info", "Sitemap index with " + str(len(entries)) + " children. " +
+                   ("Children not fetched." if not sitemap_children else "Inspecting up to " + str(sitemap_children) + " same-origin children."),
+                   "Use --sitemap-children N to inspect a bounded sample; listing is not proof of indexing.")
+            if sitemap_children:
+                selected = []
+                skipped_count = 0
+                for entry in entries:
+                    try:
+                        child_url = clean_url(entry)
+                        if not same_origin(origin, child_url):
+                            skipped_count += 1
+                            continue
+                        if equivalent_url(child_url, sitemap["url"]):
+                            skipped_count += 1
+                            continue
+                        if not any(equivalent_url(child_url, existing) for existing in selected):
+                            selected.append(child_url)
+                    except ValueError:
+                        skipped_count += 1
+                sitemap_coverage["partial"] = bool(skipped_count or len(selected) > sitemap_children)
+                if skipped_count:
+                    record("sitemap-selection", "info", str(skipped_count) + " malformed, cross-origin, or self-referencing child locations skipped.",
+                           "Inspect skipped locations manually; cross-origin sitemaps may be valid.", location=sitemap["url"])
+                failed = False
+                for child_url in selected[:sitemap_children]:
+                    child = request(child_url, same_origin_only=True)
+                    sitemap_coverage["children_requested"] += 1
+                    try:
+                        if child["status"] != 200 or child["truncated"]:
+                            raise ValueError(resource_problem(child))
+                        child_root = ET.fromstring(child["body"])
+                        child_kind = child_root.tag.split("}")[-1]
+                        if child_kind == "sitemapindex":
+                            sitemap_coverage["partial"] = True
+                            record("sitemap-child", "info", "Nested sitemap index; grandchildren not fetched.",
+                                   "Inspect this nested index separately; this option follows one level only.")
+                            continue
+                        if child_kind != "urlset":
+                            raise ValueError("Unexpected XML root: " + child_kind)
+                        locations = [(e.text or "").strip() for e in child_root.iter() if e.tag.split("}")[-1] == "loc"]
+                        sitemap_coverage["children_parsed"] += 1
+                        if any(equivalent_url(final, entry) for entry in locations):
+                            sitemap_coverage["matching_sitemaps"].append(child["url"])
+                        record("sitemap-child", "info", str(len(locations)) + " URLs parsed in child sitemap.",
+                               "Review aggregate membership and coverage below; absence from one child is not a site-wide finding.")
+                    except (ValueError, ET.ParseError) as exc:
+                        failed = True
+                        sitemap_coverage["partial"] = True
+                        record("sitemap-child", "unknown", str(exc), "Retry this child or inspect its response with another available tool.")
+                found = bool(sitemap_coverage["matching_sitemaps"])
+                sitemap_coverage["membership"] = "found" if found else "not_verified" if sitemap_coverage["partial"] else "not_found"
+                status = "pass" if found else "unknown" if failed else "info" if sitemap_coverage["partial"] else "warn"
+                record("sitemap-membership", status,
+                       ("Audited URL found in: " + ", ".join(sitemap_coverage["matching_sitemaps"]) if found else "Audited URL not found in the parsed child sample.") +
+                       " Parsed " + str(sitemap_coverage["children_parsed"]) + " of " + str(len(selected)) + " eligible unique children; skipped " + str(skipped_count) + " locations. " +
+                       ("Coverage is partial." if sitemap_coverage["partial"] else "All eligible children in this index were checked."),
+                       "Listing does not prove indexing. Check intended canonical membership; expand the sample or inspect skipped/nested files when coverage is partial.", location=sitemap["url"])
         else:
-            record("sitemap", "pass" if any(equivalent_url(final, entry) for entry in entries) else "warn", str(len(entries)) + " URLs; audited URL " + ("present." if any(equivalent_url(final, entry) for entry in entries) else "not found in this file."), "This samples one file. Include intended canonical URLs; missing membership is not an indexing prohibition.")
+            present = any(equivalent_url(final, entry) for entry in entries)
+            sitemap_coverage["membership"] = "found" if present else "not_found"
+            if present:
+                sitemap_coverage["matching_sitemaps"].append(sitemap["url"])
+            record("sitemap", "pass" if present else "warn", str(len(entries)) + " URLs; audited URL " + ("present." if present else "not found in this file."), "This samples one file. Include intended canonical URLs; missing membership is not an indexing prohibition.")
     except (ValueError, ET.ParseError) as exc:
         record("sitemap", "unknown", str(exc), "Inspect the intended XML sitemap. Missing or unparsed sitemap does not prove indexing failure.")
     counts = {status: sum(f["status"] == status for f in findings)
@@ -318,10 +386,10 @@ def audit(target, timeout=10):
     skipped = [] if findings[0]["status"] == "pass" else [
         "noindex:Googlebot", "noindex:OAI-SearchBot", "title", "description", "h1", "canonical", "structured-data"]
     summary = dict(counts=counts, incomplete=bool(counts["unknown"] or skipped),
-                   skipped_checks=skipped, scope="One initial page response, robots.txt, and one sitemap; not a whole-site audit.")
-    return dict(version="0.3.0", summary=summary, requested_url=target, final_url=final,
+                   skipped_checks=skipped, scope="One initial page response, robots.txt, one sitemap and up to " + str(sitemap_children) + " child sitemaps; not a whole-site audit.")
+    return dict(version="0.4.0", summary=summary, sitemap_coverage=sitemap_coverage, requested_url=target, final_url=final,
                 checked_at=dt.datetime.now(dt.timezone.utc).isoformat(), resources=resources, findings=findings,
-                limits=["Initial responses only; no JavaScript rendering or actual bot impersonation.", "One page, robots.txt, one same-origin sitemap; 1 MiB per response. Cross-origin sitemap redirects are not followed.", "Google robots rules use the first 500 KiB; large-file handling for other providers is not verified.", "OpenAI generic noindex meta is checked; its support for scoped meta and X-Robots-Tag is not assumed.", "No indexing, ranking, citation, conversion, or Core Web Vitals verification.", "Robots evaluator covers common rules; vendor-specific behavior and cached policies need separate verification."])
+                limits=["Initial responses only; no JavaScript rendering or actual bot impersonation.", "One page, robots.txt, one same-origin sitemap and up to " + str(sitemap_children) + " child sitemaps; 1 MiB per response. No nested recursion or cross-origin sitemap redirects.", "Google robots rules use the first 500 KiB; large-file handling for other providers is not verified.", "OpenAI generic noindex meta is checked; its support for scoped meta and X-Robots-Tag is not assumed.", "No indexing, ranking, citation, conversion, or Core Web Vitals verification.", "Robots evaluator covers common rules; vendor-specific behavior and cached policies need separate verification."])
 
 
 def markdown(report):
@@ -356,6 +424,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("url")
     parser.add_argument("--format", choices=("markdown", "json"), default="markdown")
+    parser.add_argument("--sitemap-children", type=int, default=0, help="Inspect up to N same-origin sitemap children (0–5; default 0, one level only)")
     parser.add_argument("--timeout", type=float, default=10, help="Seconds per request (0 < timeout <= 30)")
     parser.add_argument("--require-complete", action="store_true", help="Exit 3 when any check is unknown or initial HTML checks were skipped")
     parser.add_argument("--fail-on-block", action="store_true", help="Exit 1 if an observed discovery block is found")
@@ -363,7 +432,7 @@ def main():
     if not 0 < args.timeout <= 30:
         parser.error("Timeout must be between 0 and 30 seconds.")
     try:
-        report = audit(args.url, args.timeout)
+        report = audit(args.url, args.timeout, args.sitemap_children)
     except ValueError as exc:
         parser.error(str(exc))
     print(json.dumps(report, indent=2, ensure_ascii=False) if args.format == "json" else markdown(report))
