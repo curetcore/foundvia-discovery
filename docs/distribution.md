@@ -31,7 +31,7 @@ Give it a SaaS URL. It checks discovery blockers and shows the evidence plus wha
 No API keys. No paid crawler. No made-up SEO score.
 
 Try it, report what breaks, or contribute a fix:
-https://github.com/curetcore/foundvia-discovery
+https://github.com/ronaldships/foundvia-discovery
 
 **Draft 2 — concrete lesson**
 

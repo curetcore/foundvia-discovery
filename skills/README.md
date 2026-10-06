@@ -3,7 +3,7 @@
 Start with [foundvia-discovery](foundvia-discovery/): an English skill with a bundled Python helper for auditing, fixing, launching, and measuring SaaS discovery.
 
 ```bash
-npx skills add curetcore/foundvia-discovery --skill foundvia-discovery
+npx skills add ronaldships/foundvia-discovery --skill foundvia-discovery
 ```
 
 [Installation options](../docs/install.md) · [Module review status](../README.md#advanced-modules) · [Public skill review](../docs/skill-review.md)

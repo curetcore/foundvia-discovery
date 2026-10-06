@@ -10,7 +10,7 @@ Ronaldo Paulino / @ronaldships / Ship & Grow
 
 English community edition v1.0 / October 6, 2026
 
-Adapted from [SEO + GEO Playbook](https://github.com/curetcore/foundvia-discovery), by Ronaldo Paulino. Source snapshot: `92c63d26e632b8af19f538540803f8fc9a886145`.
+Adapted from [SEO + GEO Playbook](https://github.com/ronaldships/foundvia-discovery), by Ronaldo Paulino. Source snapshot: `92c63d26e632b8af19f538540803f8fc9a886145`.
 
 This is an implementation guide, not a promise of rankings, recommendations, or traffic within a deadline. Google and OpenAI do not endorse this guide. The 100-visit target is a learning milestone, not a benchmark proved by the source repository.
 
@@ -323,7 +323,7 @@ Use the prompt as a starting point, not a substitute for reviewing the changes a
 
 Official guidance checked October 6, 2026. Provider behavior can change; follow the linked documents for current details.
 
-- **[R] Original playbook:** [curetcore/foundvia-discovery](https://github.com/curetcore/foundvia-discovery/tree/92c63d26e632b8af19f538540803f8fc9a886145). Adapted technical, on-page, content, analytics, AI search, and growth chapters.
+- **[R] Original playbook:** [ronaldships/foundvia-discovery](https://github.com/ronaldships/foundvia-discovery/tree/92c63d26e632b8af19f538540803f8fc9a886145). Adapted technical, on-page, content, analytics, AI search, and growth chapters.
 - **[1] Google:** [SEO Starter Guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide).
 - **[2] OpenAI:** [Overview of OpenAI Crawlers](https://developers.openai.com/api/docs/bots).
 - **[3] OpenAI:** [Publishers and Developers FAQ](https://help.openai.com/en/articles/12627856).
@@ -361,7 +361,7 @@ Bring one real finding back to other builders:
 
 Share public examples and aggregate results. Keep visitor identities, customer information, and credentials private. When reporting results, include the date range and channel definition so other people can understand what happened.
 
-**Share the resource, suggest a correction, or contribute a tested example.** Start with the [source repository](https://github.com/curetcore/foundvia-discovery). Follow [@ronaldships](https://x.com/ronaldships) for the ongoing journey.
+**Share the resource, suggest a correction, or contribute a tested example.** Start with the [source repository](https://github.com/ronaldships/foundvia-discovery). Follow [@ronaldships](https://x.com/ronaldships) for the ongoing journey.
 
 ## MIT License
 

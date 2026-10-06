@@ -5,7 +5,7 @@ Proyecto open source de [Foundvia](https://foundvia.dev) para ayudar a que tu Sa
 ## Empieza con tu sitio
 
 ```bash
-git clone https://github.com/curetcore/foundvia-discovery.git
+git clone https://github.com/ronaldships/foundvia-discovery.git
 cd foundvia-discovery
 python3 skills/foundvia-discovery/scripts/discovery_audit.py https://tu-sitio.com
 ```
@@ -17,7 +17,7 @@ Recibirás problemas observados, evidencia y el próximo paso. El auditor revisa
 ## Úsalo como skill
 
 ```bash
-npx skills add curetcore/foundvia-discovery --skill foundvia-discovery
+npx skills add ronaldships/foundvia-discovery --skill foundvia-discovery
 ```
 
 Pídele a tu agente:
