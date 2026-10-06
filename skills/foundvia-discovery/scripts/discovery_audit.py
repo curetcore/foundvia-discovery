@@ -310,16 +310,28 @@ def audit(target, timeout=10):
         if kind == "sitemapindex":
             record("sitemap", "info", "Sitemap index with " + str(len(entries)) + " children. Children not fetched.", "Inspect the appropriate child to check inclusion of the audited URL.")
         else:
-            record("sitemap", "pass" if final in entries else "warn", str(len(entries)) + " URLs; audited URL " + ("present." if final in entries else "not found in this file."), "This samples one file. Include intended canonical URLs; missing membership is not an indexing prohibition.")
+            record("sitemap", "pass" if any(equivalent_url(final, entry) for entry in entries) else "warn", str(len(entries)) + " URLs; audited URL " + ("present." if any(equivalent_url(final, entry) for entry in entries) else "not found in this file."), "This samples one file. Include intended canonical URLs; missing membership is not an indexing prohibition.")
     except (ValueError, ET.ParseError) as exc:
         record("sitemap", "unknown", str(exc), "Inspect the intended XML sitemap. Missing or unparsed sitemap does not prove indexing failure.")
-    return dict(version="0.2.1", requested_url=target, final_url=final,
+    counts = {status: sum(f["status"] == status for f in findings)
+              for status in ("pass", "block", "warn", "info", "unknown")}
+    skipped = [] if findings[0]["status"] == "pass" else [
+        "noindex:Googlebot", "noindex:OAI-SearchBot", "title", "description", "h1", "canonical", "structured-data"]
+    summary = dict(counts=counts, incomplete=bool(counts["unknown"] or skipped),
+                   skipped_checks=skipped, scope="One initial page response, robots.txt, and one sitemap; not a whole-site audit.")
+    return dict(version="0.3.0", summary=summary, requested_url=target, final_url=final,
                 checked_at=dt.datetime.now(dt.timezone.utc).isoformat(), resources=resources, findings=findings,
                 limits=["Initial responses only; no JavaScript rendering or actual bot impersonation.", "One page, robots.txt, one same-origin sitemap; 1 MiB per response. Cross-origin sitemap redirects are not followed.", "Google robots rules use the first 500 KiB; large-file handling for other providers is not verified.", "OpenAI generic noindex meta is checked; its support for scoped meta and X-Robots-Tag is not assumed.", "No indexing, ranking, citation, conversion, or Core Web Vitals verification.", "Robots evaluator covers common rules; vendor-specific behavior and cached policies need separate verification."])
 
 
 def markdown(report):
     lines = ["# Discovery audit", "", "URL: " + report["final_url"], "Checked: " + report["checked_at"], ""]
+    summary = report["summary"]
+    lines += ["## Summary", "", " · ".join(str(count) + " " + status.upper() for status, count in summary["counts"].items()),
+              "", "Coverage: " + ("Incomplete within the helper's scope." if summary["incomplete"] else "Checks completed within the helper's scope."),
+              summary["scope"], ""]
+    if summary["skipped_checks"]:
+        lines += ["HTML checks not run: " + ", ".join(summary["skipped_checks"]) + ".", ""]
     inaccessible = [r for r in report["resources"] if r["error"]]
     unknown = [f for f in report["findings"] if f["status"] == "unknown"]
     if inaccessible:
@@ -345,6 +357,7 @@ def main():
     parser.add_argument("url")
     parser.add_argument("--format", choices=("markdown", "json"), default="markdown")
     parser.add_argument("--timeout", type=float, default=10, help="Seconds per request (0 < timeout <= 30)")
+    parser.add_argument("--require-complete", action="store_true", help="Exit 3 when any check is unknown or initial HTML checks were skipped")
     parser.add_argument("--fail-on-block", action="store_true", help="Exit 1 if an observed discovery block is found")
     args = parser.parse_args()
     if not 0 < args.timeout <= 30:
@@ -354,7 +367,9 @@ def main():
     except ValueError as exc:
         parser.error(str(exc))
     print(json.dumps(report, indent=2, ensure_ascii=False) if args.format == "json" else markdown(report))
-    return int(args.fail_on_block and any(f["status"] == "block" for f in report["findings"]))
+    if args.fail_on_block and report["summary"]["counts"]["block"]:
+        return 1
+    return 3 if args.require_complete and report["summary"]["incomplete"] else 0
 
 
 if __name__ == "__main__":

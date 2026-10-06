@@ -20,9 +20,10 @@ python3 skills/foundvia-discovery/scripts/discovery_audit.py https://example.com
 | `--format markdown` | Human-readable evidence and next actions (default) |
 | `--format json` | Resources, timestamps, findings, and limitations |
 | `--timeout N` | Per-network-operation timeout in seconds; default 10, maximum 30. Not a whole-run deadline |
+| `--require-complete` | Exit 3 if any finding is unknown or initial HTML checks were skipped; completed scope still does not mean a whole-site audit |
 | `--fail-on-block` | Exit 1 for an observed block; default completion exits 0 |
 
-Invalid input exits 2. `unknown` findings do not trigger `--fail-on-block`; this option is not a complete SEO CI gate.
+Invalid input exits 2. If both strict flags are supplied, observed blocks take precedence (exit 1); otherwise an incomplete report exits 3. `unknown` findings do not trigger `--fail-on-block`; this option is not a complete SEO CI gate.
 
 ## Checked
 
@@ -63,3 +64,5 @@ For actual indexing, use authorized Search Console URL Inspection. For rendered 
 Network, DNS, TLS, or timeout failures are inspection failures, not evidence that the site's SEO is broken. Markdown reports lead with the inaccessible resources and original errors, then group UNKNOWN findings under **Not checked**. JSON retains individual unknown findings and the resource errors. Retry from an environment with access, or inspect the same resources with another available tool; keep TLS verification enabled.
 
 Canonical comparison treats an empty root path and `/` as equivalent, and normalizes hostname case and default ports. It preserves non-root trailing slashes, path case, query strings, and protocol differences. A different canonical still requires reviewing the intended URL.
+
+JSON report version 0.3.0 adds `summary`: status counts, an incomplete flag, skipped HTML checks, and scope. Existing resource and finding fields remain. Sitemap membership uses the same conservative URL equivalence as canonical comparison.

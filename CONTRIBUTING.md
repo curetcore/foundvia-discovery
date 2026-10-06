@@ -22,7 +22,9 @@ python3 -m unittest discover -s tests -v
 The date helper tests run on Node 22.18+ (native TypeScript stripping):
 
 ```bash
-node tests/test_dates.mjs
+npm ci --ignore-scripts
+npm test
+python3 tools/check_repository.py
 ```
 
 If your agent environment provides a skill validator, validate the changed SKILL.md frontmatter. Otherwise parse its YAML and check name/description. Frontmatter validity is not behavioral evaluation.

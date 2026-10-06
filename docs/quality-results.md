@@ -1,5 +1,7 @@
 # O3 — quality report
 
+**Historical O3 snapshot:** status and results below describe the original evaluation candidate, not the current published branch. See [current validation](audit-validation.md).
+
 October 6, 2026 · Local candidate on `codex/o3-quality` · Not pushed, merged, or released.
 
 ## What changed

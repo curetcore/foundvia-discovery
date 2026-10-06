@@ -1,0 +1,28 @@
+name: Incorrect or incomplete audit
+description: Help us reproduce an incorrect finding or incomplete audit.
+title: "[Audit] "
+body:
+  - type: markdown
+    attributes:
+      value: "Share public or minimal fixtures only. Remove credentials, private query tokens, and customer data from URLs and reports."
+  - type: textarea
+    id: setup
+    attributes:
+      label: Command and environment
+      description: "Exact command or agent prompt, Python version, agent/tool name, and repo commit or installation date."
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Public URL or minimal response fixture
+      description: "A minimal HTML/robots/sitemap fixture works if you cannot share the public URL."
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Expected and actual behavior
+      description: "Include the relevant report excerpt and resource error, with sensitive details removed."
+    validations:
+      required: true

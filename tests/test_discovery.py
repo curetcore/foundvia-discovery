@@ -155,6 +155,10 @@ class ResourceFailureTests(unittest.TestCase):
         self.assertEqual(report["robots:Googlebot"]["status"], "info")
         self.assertEqual(report["robots:OAI-SearchBot"]["status"], "unknown")
 
+    def test_root_sitemap_membership_normalizes_empty_path(self):
+        report = self.report(sitemap_body='<urlset><url><loc>https://example.com</loc></url></urlset>')
+        self.assertEqual(report["sitemap"]["status"], "pass")
+
     def test_rate_limit_and_server_error_remain_unknown(self):
         for code in (429, 503):
             with self.subTest(code=code):
@@ -264,6 +268,26 @@ class IntegrationTests(unittest.TestCase):
         self.assertTrue(finding["verification"])
         self.assertIn("Verify:", discovery.markdown(report))
         self.assertEqual(json.loads(json.dumps(report)), report)
+
+    def test_summary_marks_skipped_html_checks_incomplete(self):
+        report = discovery.audit(self.origin + "/error", timeout=2)
+        self.assertTrue(report["summary"]["incomplete"])
+        self.assertIn("title", report["summary"]["skipped_checks"])
+        self.assertEqual(sum(report["summary"]["counts"].values()), len(report["findings"]))
+        text = discovery.markdown(report)
+        self.assertIn("HTML checks not run:", text)
+        self.assertIn("Incomplete within", text)
+
+    def test_complete_flag_and_block_exit_precedence(self):
+        for path, flags, expected in (("/public", ["--require-complete"], 0),
+                                     ("/error", ["--require-complete"], 3),
+                                     ("/error", ["--require-complete", "--fail-on-block"], 1),
+                                     ("/large", ["--require-complete"], 3)):
+            with self.subTest(path=path, flags=flags):
+                proc = subprocess.run([sys.executable, str(SCRIPT), self.origin + path, *flags,
+                                       "--format", "json"], capture_output=True, text=True)
+                self.assertEqual(proc.returncode, expected, proc.stderr)
+                self.assertIn("summary", json.loads(proc.stdout))
 
     def test_openai_header_support_is_not_assumed(self):
         findings = self.findings("/excluded")
