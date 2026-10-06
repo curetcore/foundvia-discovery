@@ -3,6 +3,8 @@ name: seo-content-strategy
 description: Diseña estrategia de contenido SEO — BLUF, content clusters (hub & spoke), passage-level ranking, E-E-A-T, keyword research por intent, FAQ optimization, content briefs y cadencia de actualización. Use this skill whenever the user asks about blog strategy, content planning, what to write, keyword research, content clusters, pillar pages, E-E-A-T signals, author bios, FAQ pages, or content calendar — even if they don't mention "SEO" explicitly.
 ---
 
+> **Historical module — full review pending.** Follow the [corrected discovery guidance](../foundvia-discovery/references/discovery.md) before applying these examples. Do not invent dates, treat training bots as search bots, require llms.txt/FAQ markup, count all Bing as Copilot, or use word counts as ranking rules.
+
 # Content Strategy
 
 Estrategia de contenido para SEO + GEO. Aplica a blog, docs, landing pages y product pages. Probado en producción sobre Linkship y Karrito.

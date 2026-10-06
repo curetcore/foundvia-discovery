@@ -1,0 +1,4 @@
+interface:
+  display_name: "Foundvia Discovery"
+  short_description: "Find Google and ChatGPT discovery blockers"
+  default_prompt: "Use $foundvia-discovery to audit my SaaS discovery and propose a measurable first-100-visits plan."

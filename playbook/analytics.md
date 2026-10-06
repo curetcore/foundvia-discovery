@@ -1,3 +1,5 @@
+> **Historical module — full review pending.** Follow the [corrected discovery guidance](../skills/foundvia-discovery/references/discovery.md) before applying these examples. Do not invent dates, treat training bots as search bots, require llms.txt/FAQ markup, count all Bing as Copilot, or use word counts as ranking rules.
+
 # SEO Analytics
 
 > Cubre Google Search Console, Core Web Vitals monitoring, AI referral tracking, rank tracking, y cadencia de auditorías.

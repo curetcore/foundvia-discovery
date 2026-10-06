@@ -6,6 +6,24 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ---
 
+## [Unreleased]
+
+## [3.0.0] — 2026-10-06
+
+### Added
+- Foundvia Discovery branding, English landing page, Spanish introduction, visual discovery path, and first-100-visits guide.
+- Self-contained `foundvia-discovery` skill with standard-library Python audit helper, scoped findings, JSON output, and controlled HTTP tests.
+- Public skill comparison with pinned sources and honest evaluation status; behavioral cases, community templates, and distribution drafts.
+
+### Changed
+- Corrected search/training crawler separation, optional llms.txt guidance, and unsupported AI/FAQ claims.
+- Explicitly marked remaining legacy chapters and references as pending full review.
+- Updated agent routing, installation instructions, and contribution guidance.
+
+### Removed / migration
+- **Breaking:** hash-generated date helpers (`slugToDates`, `slugToPublishedDate`, `slugToModifiedDate`) removed. Use `contentDates` with actual source records; see `playbook/slug-date-distribution.md`.
+- Removed unverified growth forecasts from the landing page.
+
 ## [2.0.0] — 2026-05-10
 
 **BREAKING**: refactor completo a arquitectura tri-capa (playbook + agent + skills).

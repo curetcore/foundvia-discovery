@@ -15,3 +15,8 @@ Thumbs.db
 # Node (si alguien clona y experimenta)
 node_modules/
 *.log
+
+# Python test artifacts
+__pycache__/
+*.pyc
+.venv/

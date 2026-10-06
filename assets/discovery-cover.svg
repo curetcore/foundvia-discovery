@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="600" viewBox="0 0 1500 600" role="img" aria-labelledby="title desc">
+<title id="title">Foundvia Discovery</title><desc id="desc">An open-source toolkit to help your SaaS get found on Google and ChatGPT. Audit, fix, measure.</desc>
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#18181b"/><stop offset="1" stop-color="#09090b"/></linearGradient></defs>
+<rect width="1500" height="600" rx="26" fill="url(#bg)"/>
+<rect x="1" y="1" width="1498" height="598" rx="26" fill="none" stroke="#3f3f46"/>
+<g font-family="Arial,Helvetica,sans-serif">
+<rect x="64" y="60" width="182" height="36" rx="18" fill="#27272a" stroke="#52525b"/>
+<circle cx="86" cy="78" r="5" fill="#86efac"/><text x="102" y="85" fill="#d4d4d8" font-size="17" letter-spacing="1">OPEN SOURCE</text>
+<text x="64" y="203" fill="#fafafa" font-size="94" font-weight="700" letter-spacing="-4">Foundvia</text>
+<text x="64" y="304" fill="#fafafa" font-size="94" font-weight="700" letter-spacing="-4">Discovery.</text>
+<text x="68" y="364" fill="#a1a1aa" font-size="29">Help your SaaS get found.</text>
+<text x="68" y="412" fill="#d4d4d8" font-size="23">Google + ChatGPT. Evidence before advice.</text>
+<path d="M68 463H692" stroke="#3f3f46"/>
+<text x="68" y="508" fill="#a1a1aa" font-size="22">AUDIT</text><path d="M154 500H202m-8-7 8 7-8 7" fill="none" stroke="#71717a" stroke-width="2"/>
+<text x="229" y="508" fill="#a1a1aa" font-size="22">FIX</text><path d="M287 500H335m-8-7 8 7-8 7" fill="none" stroke="#71717a" stroke-width="2"/>
+<text x="363" y="508" fill="#a1a1aa" font-size="22">MEASURE</text>
+<rect x="815" y="104" width="620" height="382" rx="18" fill="#18181b" stroke="#3f3f46"/>
+<path d="M815 158H1435" stroke="#3f3f46"/><circle cx="842" cy="132" r="5" fill="#52525b"/><circle cx="862" cy="132" r="5" fill="#52525b"/><circle cx="882" cy="132" r="5" fill="#52525b"/>
+<text x="1405" y="139" text-anchor="end" fill="#a1a1aa" font-size="17">ILLUSTRATIVE AUDIT</text>
+<g font-size="22">
+<rect x="845" y="191" width="104" height="34" rx="7" fill="#450a0a"/><text x="897" y="215" text-anchor="middle" fill="#fca5a5" font-size="18">BLOCK</text><text x="975" y="215" fill="#e4e4e7">Accidental noindex</text>
+<text x="845" y="264" fill="#a1a1aa" font-size="19">Evidence. Consequence. Next action.</text>
+<path d="M845 288H1404" stroke="#3f3f46"/>
+<rect x="845" y="311" width="104" height="34" rx="7" fill="#052e16"/><text x="897" y="335" text-anchor="middle" fill="#86efac" font-size="18">PASS</text><text x="975" y="335" fill="#e4e4e7">Search bot allowed</text>
+<rect x="845" y="374" width="104" height="34" rx="7" fill="#27272a"/><text x="897" y="398" text-anchor="middle" fill="#d4d4d8" font-size="18">INFO</text><text x="975" y="398" fill="#e4e4e7">Training policy preserved</text>
+</g>
+<text x="1432" y="549" text-anchor="end" fill="#71717a" font-size="21">foundvia.dev / community toolkit</text>
+</g></svg>

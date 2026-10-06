@@ -1,3 +1,5 @@
+> **Historical module — full review pending.** Follow the [corrected discovery guidance](../../foundvia-discovery/references/discovery.md) before applying these examples. Do not invent dates, treat training bots as search bots, require llms.txt/FAQ markup, count all Bing as Copilot, or use word counts as ranking rules.
+
 # `llms.txt` y `llms-full.txt` — Implementación Next.js
 
 Route Handlers que generan los dos archivos. El primero es estático con un resumen del sitio. El segundo es dinámico desde la DB.

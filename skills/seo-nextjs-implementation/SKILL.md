@@ -3,6 +3,8 @@ name: seo-nextjs-implementation
 description: Implementa SEO completo en Next.js con código TypeScript listo para pegar — JSON-LD generators (Organization, Website, Article, FAQ, BreadcrumbList, SoftwareApplication, Product), `generateMetadata` patterns, helpers de canonical URLs y slugs, y componente `<JsonLd>` para structured data. Use this skill whenever the user asks for SEO code, JSON-LD examples, structured data implementation, schema.org markup, rich snippets, generateMetadata patterns, or boilerplate SEO TypeScript — even if they don't say "Next.js".
 ---
 
+> **Historical module — full review pending.** Follow the [corrected discovery guidance](../foundvia-discovery/references/discovery.md) before applying these examples. Do not invent dates, treat training bots as search bots, require llms.txt/FAQ markup, count all Bing as Copilot, or use word counts as ranking rules.
+
 # SEO Implementation (Next.js)
 
 Código TypeScript listo para pegar. Implementa rich snippets, JSON-LD y `generateMetadata` patterns. Stack: Next.js 16 App Router, React 19 RSC, TypeScript estricto.

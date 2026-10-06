@@ -3,6 +3,8 @@ name: seo-local
 description: Optimiza SEO para negocios locales — Google Business Profile (GBP), NAP consistency, LocalBusiness JSON-LD, multi-location, reviews integration y landing pages locales. Use this skill whenever the user mentions Google Business Profile, GBP, local SEO, NAP, multi-location, store locator, restaurant SEO, "negocio físico", LocalBusiness schema, Apple Maps, Bing Places, Yelp, or asks how to rank in the Google local pack — even if they don't say "local SEO".
 ---
 
+> **Historical module — full review pending.** Follow the [corrected discovery guidance](../foundvia-discovery/references/discovery.md) before applying these examples. Do not invent dates, treat training bots as search bots, require llms.txt/FAQ markup, count all Bing as Copilot, or use word counts as ranking rules.
+
 # Local SEO
 
 SEO para negocios con presencia física o que sirven áreas específicas. Cubre GBP, NAP, schema local, multi-location y reviews. Stack: Next.js 16 App Router.

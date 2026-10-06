@@ -1,3 +1,5 @@
+> **Historical module — full review pending.** Follow the [corrected discovery guidance](../../foundvia-discovery/references/discovery.md) before applying these examples. Do not invent dates, treat training bots as search bots, require llms.txt/FAQ markup, count all Bing as Copilot, or use word counts as ranking rules.
+
 # Niche Landing Pages — Implementación
 
 Patrón completo para `/para/[nicho]` data-driven en Next.js App Router.

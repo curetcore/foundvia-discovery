@@ -9,6 +9,8 @@ metadata:
 allowed-tools: Bash(squirrel:*)
 ---
 
+> **Historical module — full review pending.** Follow the [corrected discovery guidance](../foundvia-discovery/references/discovery.md) before applying these examples. Do not invent dates, treat training bots as search bots, require llms.txt/FAQ markup, count all Bing as Copilot, or use word counts as ranking rules.
+
 # SEO Audit (squirrelscan)
 
 > **Attribution**: este skill está basado en el skill oficial de [squirrelscan](https://squirrelscan.com). Este repo lo incluye con atribución para que cualquier proyecto de SEO/GEO pueda correr auditorías completas. Documentación oficial: [docs.squirrelscan.com](https://docs.squirrelscan.com).
